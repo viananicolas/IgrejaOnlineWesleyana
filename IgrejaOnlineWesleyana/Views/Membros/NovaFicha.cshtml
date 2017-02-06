@@ -1,0 +1,485 @@
+﻿@using IgrejaOnlineWesleyana.Models
+@model IgrejaOnlineWesleyana.ViewModels.FichaCadastralViewModel
+
+@{
+    ViewBag.Title = "Nova ficha cadastral - Mulheres Wesleyanas";
+}
+
+<h2>Nova ficha cadastral - Mulheres Wesleyanas</h2>
+
+
+@using (Html.BeginForm("NovaFicha","Membros",FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Dados do membro</h3>
+            </div>
+            <div class="panel-body">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: nome" } })
+                        @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Regiao, "Região", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IDRegiao, new SelectList(Model.Regioes, "Id", "Nome"),
+                            "-Selecione uma região-", htmlAttributes: new { @class = "form-control", @data_bind = "value: idregiao" })
+                        @Html.ValidationMessageFor(model => model.IDRegiao, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Distrito, "Distrito", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IDDistrito, new SelectList(Model.Distritos, "Id", "Nome"),
+                            "-Selecione um distrito-", htmlAttributes: new { @class = "form-control", @data_bind = "value: iddistrito" })
+                        @Html.ValidationMessageFor(model => model.Distrito, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Igreja, "Igreja", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IDIgreja, new SelectList(Model.Igrejas, "Id", "Nome"),
+                            "-Selecione uma igreja-", htmlAttributes: new { @class = "form-control", @data_bind = "value: idigreja" })
+                        @Html.ValidationMessageFor(model => model.Igreja, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Congregacao, "Congregação", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IDCongregacao, new SelectList(Model.Congregacoes, "Id", "Nome"),
+                            "-Selecione uma congregação-", htmlAttributes: new { @class = "form-control", @data_bind = "value: idcongregacao" })
+                        @Html.ValidationMessageFor(model => model.Congregacao, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CPF, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CPF, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: cpf" } })
+                        @Html.ValidationMessageFor(model => model.CPF, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RG, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.RG, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: rg" } })
+                        @Html.ValidationMessageFor(model => model.RG, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OrgaoExpedidor, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.OrgaoExpedidor, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: orgaoexpedidor" } })
+                        @Html.ValidationMessageFor(model => model.OrgaoExpedidor, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">Selecione uma foto</label>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.FotoEscolhida, new { type = "file", @data_bind = "value: fotoescolhida" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DataNascimento, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DataNascimento, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: datanascimento" } })
+                        @Html.ValidationMessageFor(model => model.DataNascimento, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Telefone, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Telefone, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: telefone" } })
+                        @Html.ValidationMessageFor(model => model.Telefone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Celular, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Celular, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: celular" } })
+                        @Html.ValidationMessageFor(model => model.Celular, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: email" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    @Html.LabelFor(model => model.GrausInstrucao, "Grau de instrução", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IDGrauInstrucao, new SelectList(Model.GrausInstrucao.OrderBy(i => i.TipoGrau), "Id", "TipoGrau"),
+                            "-Selecione um grau-", htmlAttributes: new { @class = "form-control", @data_bind = "value: idgrauinstrucao" })
+                        @Html.ValidationMessageFor(model => model.GrausInstrucao, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Nacionalidade, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Nacionalidade, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: nacionalidade" } })
+                        @Html.ValidationMessageFor(model => model.Nacionalidade, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Endereço</h3>
+            </div>
+            <div class="panel-body">
+                <hr />
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CEP, "CEP", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CEP, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: cep" } })
+                        @Html.ValidationMessageFor(model => model.CEP, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Endereco, "Endereço com número", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Endereco, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: endereco" } })
+                        @Html.ValidationMessageFor(model => model.Endereco, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Complemento, "Complemento", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Complemento, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: complemento" } })
+                        @Html.ValidationMessageFor(model => model.Complemento, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Bairro, "Bairro", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Bairro, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: bairro" } })
+                        @Html.ValidationMessageFor(model => model.Bairro, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                
+                
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Estados, "Estado", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IDEstado, new SelectList(Model.Estados, "Id", "UF"),
+                            "-Selecione um estado-", htmlAttributes: new { @class = "form-control", @data_bind = "value: idestado" })
+                        @Html.ValidationMessageFor(model => model.Estados, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Cidades, "Cidade", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IDCidade, new SelectList(Model.Cidades.OrderBy(i=>i.Cidade1), "Id", "Cidade1"),
+                            "-Selecione uma cidade-", htmlAttributes: new { @class = "form-control", @data_bind = "value: idcidade" })
+                        @Html.ValidationMessageFor(model => model.Cidades, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Naturalidades, "Naturalidade", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IDNaturalidade, new SelectList(Model.Naturalidades.OrderBy(i => i.Cidade1), "Id", "Cidade1"),
+                            "-Selecione uma cidade-", htmlAttributes: new { @class = "form-control", @data_bind = "value: idnaturalidade" })
+                        @Html.ValidationMessageFor(model => model.Naturalidades, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Dados do conjugue</h3>
+            </div>
+            <div class="panel-body">
+                <hr />
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ConjugueMembro, "Nome completo do conjugue", htmlAttributes: new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ConjugueMembro.Nome, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: nomeconjugue"}})
+                        @Html.ValidationMessageFor(model => model.ConjugueMembro.Nome, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ConjugueMembro, "Data de nascimento do conjugue", htmlAttributes: new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ConjugueMembro.DataNascimento, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: datanascimentoconjugue"}})
+                        @Html.ValidationMessageFor(model => model.ConjugueMembro.DataNascimento, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ConjugueMembro, "Telefone do conjugue", htmlAttributes: new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ConjugueMembro.Telefone, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: telefoneconjugue"}})
+                        @Html.ValidationMessageFor(model => model.ConjugueMembro.Telefone, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ConjugueMembro, "Email do conjugue", htmlAttributes: new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ConjugueMembro.Email, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: emailconjugue"}})
+                        @Html.ValidationMessageFor(model => model.ConjugueMembro.Email, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TiposConjugue, "Função do conjugue", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.IDTipoConjugue, new SelectList(Model.TiposConjugue, "Id", "DescricaoTipo"),
+                            "-Selecione um tipo-", htmlAttributes: new { @class = "form-control", @data_bind = "value: idtipoconjugue" })
+                        @Html.ValidationMessageFor(model => model.TiposConjugue, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Dados dos filhos</h3>
+            </div>
+            <div class="panel-body">
+                <hr />
+                <div class="form-inline">
+                    <div class="col-md-10">
+                        <label class="control-label col-md-1">Possui filhos?</label>
+                        <label class="radio-inline"><input type="radio" name="optradio" value="1">Sim</label>
+                        <label class="radio-inline"><input type="radio" name="optradio" value="0" checked="checked">Não</label>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>@Html.LabelFor(model => model.Filho.Nome, "Nome completo", htmlAttributes: new {@class = "control-label col-md-1", @id="label1"})</th>
+                                <th>@Html.LabelFor(model => model.Filho.DataNascimento, htmlAttributes: new {@class = "control-label col-md-2", @id = "label2" })</th>
+                            </tr>
+                            </thead>
+                            <tbody data-bind="foreach: filhos">
+                            <tr>
+                                <td>@Html.EditorFor(model => model.Filho.Nome, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: nome"}})<br/></td>
+                                <td>@Html.EditorFor(model => model.Filho.DataNascimento, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: datanascimentofilho" } }) <br/></td>
+                                <td><button id="btnremoverfilho" class="form-control btn btn-danger" data-bind="click: $root.removerFilho">Remover</button><br/></td>
+                            </tr>
+                            </tbody>
+                        </table><br/>
+                        <button id="btnfilho" class="form-control btn btn-default" data-bind="click: novoFilho">Novo filho</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input id="submeter" value="Salvar cadastro" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+}
+
+<div>
+    @Html.ActionLink("Retornar à lista", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/inputmask")
+    @Scripts.Render("~/bundles/knockout")
+    <script>
+        $(document).ready(function() {
+                $("#CPF").inputmask("mask", { "mask": "999.999.999-99" }, { reverse: true });
+                $("#CEP").inputmask("mask", { "mask": "99999-999" }, { reverse: true });
+                $("#Telefone").inputmask("mask", { "mask": "(99)9999-9999" }, { reverse: true });
+                $("#Celular").inputmask("mask", { "mask": "(99)99999-9999" }, { reverse: true });
+                $("#ConjugueMembro_Telefone").inputmask("mask", { "mask": "(99)9999-9999" }, { reverse: true });
+                $("#label1").hide();
+                $("#label2").hide();
+                $("#btnfilho").hide();
+                $("#Filho_Nome").hide();
+                $("#Filho_DataNascimento").hide();
+                $("#btnremoverfilho").hide();
+
+        });
+
+        function Conjugue(id, nome, datanascimento, telefone,idtipo,email,idesposa) {
+            var self = this;
+            self.id = ko.observable(id);
+            self.nome = ko.observable(nome);
+            self.datanascimento = ko.observable(datanascimento);
+            self.telefone = ko.observable(telefone);
+            self.idtipo = ko.observable(idtipo);
+            self.email = ko.observable(email);
+            self.idesposa = ko.observable(idesposa);
+        }
+
+        function Filho(id, nome, datanascimentofilho, idmae) {
+            var self = this;
+            self.id = ko.observable(id);
+            self.nome = ko.observable(nome);
+            self.datanascimentofilho = ko.observable(datanascimentofilho);
+            self.idmae = ko.observable(idmae);
+        }
+        function FichaCadastralViewModel() {
+            var self = this;
+            self.id = ko.observable();
+            self.nome = ko.observable("");
+            self.email = ko.observable("");
+            self.datanascimento = ko.observable();
+            self.telefone = ko.observable("");
+            self.celular = ko.observable("");
+            self.rg = ko.observable("");
+            self.orgaoexpedidor = ko.observable("");
+            self.cpf = ko.observable("");
+            self.cep = ko.observable("");
+            self.nacionalidade = ko.observable("");
+            self.endereco = ko.observable("");
+            self.complemento = ko.observable("");
+            self.bairro = ko.observable("");
+            self.estadocivil = ko.observable("");
+            self.idregiao = ko.observable();
+            self.iddistrito = ko.observable();
+            self.idigreja = ko.observable();
+            self.idcongregacao = ko.observable();
+            self.idestado = ko.observable();
+            self.idgrauinstrucao = ko.observable();
+            self.idcidade = ko.observable();
+            self.idtipoconjugue = ko.observable();
+            //self.conjugue = ko.observable();
+            self.idnaturalidade = ko.observable();
+            self.id = ko.observable();
+            self.filho = ko.observable();
+            self.filhos = ko.observableArray();
+
+            self.idconjugue = ko.observable();
+            self.nomeconjugue = ko.observable("");
+            self.datanascimentoconjugue = ko.observable();
+            self.telefoneconjugue = ko.observable("");
+            self.idtipoconjugue = ko.observable();
+            self.emailconjugue = ko.observable("");
+            self.idesposa = ko.observable();
+
+            self.fotoescolhida = ko.observable();
+            self.fotoselecionada = "";
+            self.novoFilho=function() {
+                self.filhos.push(new Filho(0,"",0,0));
+            }
+            self.removerFilho = function (filho) {
+                self.filhos.remove(filho);
+            }
+            $("#FotoEscolhida").change(function () {
+                var file = document.getElementById('FotoEscolhida').files[0];
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var arrayBuffer = this.result,
+                      array = new Uint8Array(arrayBuffer),
+                      binaryString = String.fromCharCode.apply(null, array);
+                    console.log(array);
+                    console.log(binaryString);
+                    self.fotoselecionada = Array.from(array);
+                    console.log(self.fotoselecionada);
+                }
+                reader.readAsArrayBuffer(file);
+            });
+
+            $("#submeter").click(function () {
+                var novoconjugue = {
+                    id: self.idconjugue(),
+                nome:self.nomeconjugue(),
+                datanascimento:self.datanascimentoconjugue(),
+                telefone:self.telefoneconjugue(),
+                idtipo: self.idtipoconjugue(),
+                email:self.emailconjugue(),
+                idesposa:self.idesposa()
+                };
+
+                var dado = {
+                    id:self.id(),
+                    nome: self.nome(),
+                    email: self.email(),
+                    datanascimento: self.datanascimento(),
+                    telefone: self.telefone(),
+                    celular: self.celular(),
+                    rg: self.rg(),
+                    orgaoexpedidor: self.orgaoexpedidor(),
+                    cpf: self.cpf(),
+                    cep: self.cep(),
+                    nacionalidade: self.nacionalidade(),
+                endereco: self.endereco(),
+                complemento: self.complemento(),
+                bairro: self.bairro(),
+                estadocivil: self.estadocivil(),
+                idtipoconjugue:self.idtipoconjugue(),
+                idregiao: self.idregiao(),
+                iddistrito: self.iddistrito(),
+                idigreja: self.idigreja(),
+                idcongregacao: self.idcongregacao(),
+                idestado: self.idestado(),
+                idgrauinstrucao: self.idgrauinstrucao(),
+                idcidade: self.idcidade(),
+                idnaturalidade: self.idnaturalidade(),
+                filho: self.filho(),
+                filhos: self.filhos(),
+                conjuguemembro: novoconjugue,
+                fotoescolhida: ko.toJSON(self.fotoselecionada)
+                };
+
+                console.log(dado);
+                $.ajax({
+                    url: '/Membros/NovaFicha',
+                    type: 'post',
+                    contentType: 'application/json; charset=utf-8',
+                    data: ko.toJSON(dado),
+                    success: window.location.replace("/Membros/Index"),
+                    complete: function () { console.log("oi") }
+                });
+            });
+            console.log($("input[name=optradio]:checked").val());
+            $("input[name=optradio]").change(function () {
+                console.log($("input[name=optradio]:checked").val());
+                if ($("input[name=optradio]:checked").val() == 1) {
+                    $("#label1").show();
+                    $("#label2").show();
+                    $("#btnfilho").show();
+                    $("#Filho_Nome").show();
+                    $("#Filho_DataNascimento").show();
+                    $("#btnremoverfilho").show();
+                } else {
+                    $("#label1").hide();
+                    $("#label2").hide();
+                    $("#btnfilho").hide();
+                    $("#Filho_Nome").hide();
+                    $("#Filho_DataNascimento").hide();
+                    $("#btnremoverfilho").hide();
+                    self.filho = ko.observable();
+                    self.filhos.removeAll();
+                }
+            });
+
+        }
+        ko.applyBindings(new FichaCadastralViewModel());
+    </script>
+}

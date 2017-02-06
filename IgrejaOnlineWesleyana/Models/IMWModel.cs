@@ -1,0 +1,267 @@
+namespace IgrejaOnlineWesleyana.Models
+{
+    using System;
+    using System.Data.Entity;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
+
+    public partial class IMWModel : DbContext
+    {
+        public IMWModel()
+            : base("name=IMWModel")
+        {
+        }
+
+        public virtual DbSet<Cidade> Cidade { get; set; }
+        public virtual DbSet<Congregacao> Congregacao { get; set; }
+        public virtual DbSet<Conjugue> Conjugue { get; set; }
+        public virtual DbSet<Distrito> Distrito { get; set; }
+        public virtual DbSet<Estado> Estado { get; set; }
+        public virtual DbSet<Filho> Filho { get; set; }
+        public virtual DbSet<Foto> Foto { get; set; }
+        public virtual DbSet<GrauInstrucao> GrauInstrucao { get; set; }
+        public virtual DbSet<Igreja> Igreja { get; set; }
+        public virtual DbSet<Membro> Membro { get; set; }
+        public virtual DbSet<Regiao> Regiao { get; set; }
+        public virtual DbSet<TipoConjugue> TipoConjugue { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Cidade>()
+                .Property(e => e.Cidade1)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Cidade>()
+                .HasMany(e => e.Membro)
+                .WithOptional(e => e.Cidade)
+                .HasForeignKey(e => e.IDNaturalidade);
+
+            modelBuilder.Entity<Cidade>()
+                .HasMany(e => e.Membro1)
+                .WithOptional(e => e.Cidade1)
+                .HasForeignKey(e => e.IDCidade);
+
+            modelBuilder.Entity<Congregacao>()
+                .Property(e => e.Nome)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Congregacao>()
+                .Property(e => e.Endereco)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Congregacao>()
+                .Property(e => e.Bairro)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Congregacao>()
+                .Property(e => e.CEP)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Congregacao>()
+                .HasMany(e => e.Membro1)
+                .WithOptional(e => e.Congregacao)
+                .HasForeignKey(e => e.IDCongregacao);
+
+            modelBuilder.Entity<Conjugue>()
+                .Property(e => e.Nome)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Conjugue>()
+                .Property(e => e.Telefone)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Conjugue>()
+                .Property(e => e.Email)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Distrito>()
+                .Property(e => e.Nome)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Distrito>()
+                .HasMany(e => e.Igreja)
+                .WithRequired(e => e.Distrito)
+                .HasForeignKey(e => e.IDDistrito)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Distrito>()
+                .HasMany(e => e.Membro1)
+                .WithOptional(e => e.Distrito)
+                .HasForeignKey(e => e.IDDistrito);
+
+            modelBuilder.Entity<Estado>()
+                .Property(e => e.UF)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Estado>()
+                .Property(e => e.Estado1)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Estado>()
+                .HasMany(e => e.Cidade)
+                .WithRequired(e => e.Estado)
+                .HasForeignKey(e => e.IDEstado)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Estado>()
+                .HasMany(e => e.Membro)
+                .WithOptional(e => e.Estado)
+                .HasForeignKey(e => e.IDEstado);
+
+            modelBuilder.Entity<Filho>()
+                .Property(e => e.Nome)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<GrauInstrucao>()
+                .Property(e => e.TipoGrau)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<GrauInstrucao>()
+                .HasMany(e => e.Membro)
+                .WithOptional(e => e.GrauInstrucao)
+                .HasForeignKey(e => e.IDGrauInstrucao);
+
+            modelBuilder.Entity<Igreja>()
+                .Property(e => e.Nome)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Igreja>()
+                .Property(e => e.Endereco)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Igreja>()
+                .Property(e => e.Bairro)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Igreja>()
+                .Property(e => e.CEP)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Igreja>()
+                .HasMany(e => e.Congregacao)
+                .WithOptional(e => e.Igreja)
+                .HasForeignKey(e => e.IDIgreja);
+
+            modelBuilder.Entity<Igreja>()
+                .HasMany(e => e.Membro1)
+                .WithOptional(e => e.Igreja)
+                .HasForeignKey(e => e.IDIgreja);
+
+            modelBuilder.Entity<Membro>()
+                .Property(e => e.Nome)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Membro>()
+                .Property(e => e.Email)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Membro>()
+                .Property(e => e.Telefone)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Membro>()
+                .Property(e => e.Celular)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Membro>()
+                .Property(e => e.Nacionalidade)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Membro>()
+                .Property(e => e.Endereco)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Membro>()
+                .Property(e => e.Complemento)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Membro>()
+                .Property(e => e.Bairro)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Membro>()
+                .Property(e => e.CEP)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Membro>()
+                .Property(e => e.EstadoCivil)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Membro>()
+                .Property(e => e.RG)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Membro>()
+                .Property(e => e.OrgaoExpedidor)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Membro>()
+                .Property(e => e.CPF)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Membro>()
+                .HasMany(e => e.Congregacoes)
+                .WithOptional(e => e.Membro)
+                .HasForeignKey(e => e.IDResponsavel);
+
+            modelBuilder.Entity<Membro>()
+                .HasMany(e => e.Conjugue)
+                .WithRequired(e => e.Membro)
+                .HasForeignKey(e => e.IDEsposa)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Membro>()
+                .HasMany(e => e.Distritos)
+                .WithOptional(e => e.Membro)
+                .HasForeignKey(e => e.IDResponsavel);
+
+            modelBuilder.Entity<Membro>()
+                .HasMany(e => e.Filhos)
+                .WithRequired(e => e.Membro)
+                .HasForeignKey(e => e.IDMae)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Membro>()
+                .HasMany(e => e.Foto1)
+                .WithRequired(e => e.Membro)
+                .HasForeignKey(e => e.IDMembro)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Membro>()
+                .HasMany(e => e.Igrejas)
+                .WithOptional(e => e.Membro)
+                .HasForeignKey(e => e.IDResponsavel);
+
+            modelBuilder.Entity<Membro>()
+                .HasMany(e => e.Regioes)
+                .WithOptional(e => e.Membro1)
+                .HasForeignKey(e => e.IDResponsavel);
+
+            modelBuilder.Entity<Regiao>()
+                .Property(e => e.Nome)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Regiao>()
+                .HasMany(e => e.Distrito)
+                .WithRequired(e => e.Regiao)
+                .HasForeignKey(e => e.IDRegiao)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Regiao>()
+                .HasMany(e => e.Membro)
+                .WithRequired(e => e.Regiao)
+                .HasForeignKey(e => e.IDRegiao)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<TipoConjugue>()
+                .Property(e => e.DescricaoTipo)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<TipoConjugue>()
+                .HasMany(e => e.Conjugue)
+                .WithRequired(e => e.TipoConjugue)
+                .HasForeignKey(e => e.IDTipo)
+                .WillCascadeOnDelete(false);
+        }
+    }
+}
