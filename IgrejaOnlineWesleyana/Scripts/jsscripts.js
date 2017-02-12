@@ -1,5 +1,10 @@
 ﻿$(document).ready(function () {
     $("#CPFBusca").inputmask("mask", { "mask": "999.999.999-99" }, { reverse: true });
+    $("#myModal")
+        .on("shown.bs.modal",
+            function() {
+                $("#CPFBusca").focus();
+            });
     $("#btnCPF").click(function (event) {
         $("#info-cpf").remove();
         $("#btnCPF").prop("disabled", true);

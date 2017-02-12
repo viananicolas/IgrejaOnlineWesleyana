@@ -324,6 +324,7 @@
                 $("#Filho_Nome").hide();
                 $("#Filho_DataNascimento").hide();
                 $("#btnremoverfilho").hide();
+                console.log($('input[name="__RequestVerificationToken"]').val());
 
             });
 
@@ -411,16 +412,7 @@
 
             $("#submeter")
                 .click(function() {
-                    //var novoconjuge = {
-                    //    id: self.idconjuge(),
-                    //    nome: self.nomeconjuge(),
-                    //    datanascimento: self.datanascimentoconjuge(),
-                    //    telefone: self.telefoneconjuge(),
-                    //    idtipo: self.idtipoconjuge(),
-                    //    email: self.emailconjuge(),
-                    //    idesposa: self.idesposa()
-                    //};
-
+                    $("#submeter").prop("disabled", true);
                     var dado = {
                         id: self.id(),
                         nome: self.nome(),
@@ -461,8 +453,11 @@
                     $.ajax({
                         url: '/Membros/NovaFicha',
                         type: 'post',
-                        contentType: 'application/json; charset=utf-8',
-                        data:ko.toJSON(dado),
+                        //contentType: 'application/json; charset=utf-8',
+                        data: {
+                            __RequestVerificationToken:$('input[name="__RequestVerificationToken"]').val(),
+                            fichaCadastralViewModel:dado
+                        },
                         success: function(xmlHttpRequest, textStatus, errorThrown) {
                             console.log("success");
                             console.log(xmlHttpRequest);
@@ -477,7 +472,11 @@
                             console.log(self.erroValidacao());
                             $("#CPF").focus();
                         },
-                        complete: function() { console.log("oi") }
+                        complete: function() {
+                            console.log("oi");
+                            $("#submeter").prop("disabled", false);
+
+                        }
                     });
                 });
             console.log($("input[name=optradio]:checked").val());

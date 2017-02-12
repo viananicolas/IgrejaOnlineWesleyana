@@ -418,6 +418,7 @@
 
             $("#submeter")
                 .click(function() {
+                    $("#submeter").prop("disabled", true);
                     var novoconjuge = {
                         id: self.idconjuge(),
                         nome: self.nomeconjuge(),
@@ -463,8 +464,12 @@
                     $.ajax({
                         url: '/Membros/AlterarFicha',
                         type: 'post',
-                        contentType: 'application/json; charset=utf-8',
-                        data: ko.toJSON(dado),
+                        //contentType: 'application/json; charset=utf-8',
+                        //data: ko.toJSON(dado),
+                        data: {
+                            __RequestVerificationToken:$('input[name="__RequestVerificationToken"]').val(),
+                            fichaCadastralViewModel:dado
+                        },
                         success: function (xmlHttpRequest, textStatus, errorThrown) {
                             console.log("success");
                             console.log(xmlHttpRequest);
@@ -479,7 +484,10 @@
                             console.log(self.erroValidacao());
                             $("#CPF").focus();
                         },
-                        complete: function() { console.log("oi") }
+                        complete: function() {
+                            console.log("oi");
+                            $("#submeter").prop("disabled", false);
+                        }
                     });
                 });
             console.log($("input[name=optradio]:checked").val());

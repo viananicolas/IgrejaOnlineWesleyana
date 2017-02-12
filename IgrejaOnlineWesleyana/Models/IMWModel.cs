@@ -1,17 +1,36 @@
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
+
 namespace IgrejaOnlineWesleyana.Models
 {
     using System;
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
+    using Microsoft.AspNet.Identity.EntityFramework;
+    public class ApplicationUser : IdentityUser
+    {
+        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
+        {
+            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
+            var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
+            // Add custom user claims here
+            return userIdentity;
+        }
+    }
 
-    public partial class IMWModel : DbContext
+    public partial class IMWModel : IdentityDbContext<ApplicationUser>
     {
         public IMWModel()
             : base("name=IMWModel")
         {
-            Configuration.ProxyCreationEnabled = false;
-            Configuration.LazyLoadingEnabled = false;
+            //Configuration.ProxyCreationEnabled = false;
+            //Configuration.LazyLoadingEnabled = false;
+        }
+        public static IMWModel Create()
+        {
+            return new IMWModel();
         }
 
         public virtual DbSet<Cidade> Cidade { get; set; }
@@ -26,9 +45,14 @@ namespace IgrejaOnlineWesleyana.Models
         public virtual DbSet<Membro> Membro { get; set; }
         public virtual DbSet<Regiao> Regiao { get; set; }
         public virtual DbSet<TipoConjuge> TipoConjuge { get; set; }
+        public DbSet<IdentityUserLogin> IdentityUserLogin { get; set; }
+        public DbSet<IdentityUserClaim> IdentityUserClaim { get; set; }
+        public DbSet<IdentityUserRole> IdentityUserRole { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<Cidade>()
                 .Property(e => e.Cidade1)
                 .IsUnicode(false);

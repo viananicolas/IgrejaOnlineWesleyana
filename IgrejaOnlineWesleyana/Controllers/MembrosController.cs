@@ -73,18 +73,18 @@ namespace IgrejaOnlineWesleyana.Controllers
             return View("NovaFicha", fichaCadastralViewModel);
         }
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> NovaFicha(FichaCadastralViewModel fichaCadastralViewModel)
         {
-            var teste = new JsonResult();
+            var jsonResult = new JsonResult();
             try
             {
-                fichaCadastralViewModel.Foto = JsonConvert.DeserializeObject<byte[]>(fichaCadastralViewModel.FotoEscolhida);
                 var validator = new CPFValidatorViewModel();
                 var result = validator.Validate(fichaCadastralViewModel);
                 var firstOrDefault = result.Errors.FirstOrDefault();
                 if (ModelState.IsValid && result.IsValid)
                 {
+                    fichaCadastralViewModel.Foto = JsonConvert.DeserializeObject<byte[]>(fichaCadastralViewModel.FotoEscolhida);
                     var membro = _mapper.Map<FichaCadastralViewModel, Membro>(fichaCadastralViewModel);
                     db.Membro.Add(membro);
                     db.SaveChanges();
@@ -119,18 +119,18 @@ namespace IgrejaOnlineWesleyana.Controllers
                         error = error + " " + item.errors[a];
                         a++;
                     }
-                    teste = new JsonResult()
+                    jsonResult = new JsonResult()
                     {
                         Data = firstOrDefault.ErrorMessage
                     };
                 }
                 else
-                    teste = new JsonResult()
+                    jsonResult = new JsonResult()
                     {
                         Data = errorModel
                     };
 
-                teste.ContentEncoding=Encoding.UTF8;
+                jsonResult.ContentEncoding=Encoding.UTF8;
                 HttpContext.Response.StatusCode =(int)HttpStatusCode.BadRequest;
 
                 fichaCadastralViewModel = new FichaCadastralViewModel
@@ -151,7 +151,7 @@ namespace IgrejaOnlineWesleyana.Controllers
                 Debug.WriteLine(e);
 
             }
-            return Json(new { data=teste }, JsonRequestBehavior.AllowGet);
+            return Json(new { data=jsonResult }, JsonRequestBehavior.AllowGet);
         }
         [NoDirectAccess]
         [HttpGet]
@@ -211,6 +211,7 @@ namespace IgrejaOnlineWesleyana.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> AlterarFicha(FichaCadastralViewModel fichaCadastralViewModel)
         {
             var jsonResult = new JsonResult();

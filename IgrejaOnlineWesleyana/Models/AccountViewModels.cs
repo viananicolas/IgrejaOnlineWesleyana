@@ -6,7 +6,7 @@ namespace IgrejaOnlineWesleyana.Models
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
-        [Display(Name = "EmailConjuge")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
     }
 
@@ -42,14 +42,14 @@ namespace IgrejaOnlineWesleyana.Models
     public class ForgotViewModel
     {
         [Required]
-        [Display(Name = "EmailConjuge")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
     }
 
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "EmailConjuge")]
+        [Display(Name = "Email")]
         [EmailAddress]
         public string Email { get; set; }
 
@@ -66,7 +66,7 @@ namespace IgrejaOnlineWesleyana.Models
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "EmailConjuge")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
         [Required]
@@ -85,7 +85,7 @@ namespace IgrejaOnlineWesleyana.Models
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "EmailConjuge")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
         [Required]
@@ -106,7 +106,7 @@ namespace IgrejaOnlineWesleyana.Models
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "EmailConjuge")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
     }
 }
