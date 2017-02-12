@@ -1,14 +1,17 @@
-﻿@using IgrejaOnlineWesleyana.Extensions
+﻿@using System.Text
 @using IgrejaOnlineWesleyana.Models
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Converters
 @model IgrejaOnlineWesleyana.ViewModels.FichaCadastralViewModel
+    
 
 @{
-    ViewBag.Title = "Nova ficha cadastral - Mulheres Wesleyanas";
+    ViewBag.Title = "Alterar ficha cadastral - Mulheres Wesleyanas";
 }
 
-<h2>Nova ficha cadastral - Mulheres Wesleyanas</h2>
+<h2>Alterar ficha cadastral - Mulheres Wesleyanas</h2>
 
-@using (Ajax.BeginForm("NovaFicha", "Membros", new { ReturnUrl = "/Membros/Index" }, new AjaxOptions { UpdateTargetId = "TheDiv"}, new { @class = "form-horizontal", role = "form" }))
+@using (Ajax.BeginForm("AlterarFicha", "Membros", new { ReturnUrl = "/Membros/Index" }, new AjaxOptions { UpdateTargetId = "TheDiv" }, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
 
@@ -18,9 +21,9 @@
                 <h3 class="panel-title">Dados do membro</h3>
             </div>
             <div class="panel-body">
+                <img class="img-responsive img-rounded" data-bind="attr: {src: foto}" alt="Foto do membro" />
                 <hr/>
                 @Html.ValidationSummary(true, "", new {@class = "text-danger"})
-
                 <div class="form-group">
                     @Html.LabelFor(model => model.Nome, htmlAttributes: new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
@@ -68,7 +71,9 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.CPF, htmlAttributes: new {@class = "control-label col-md-2"})
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.CPF, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: cpf"}})
+                        @Html.TextBoxFor(model => model.CPF, new
+                        {disabled = "disabled", @readonly = "readonly", @class = "form-control", @data_bind = "value: cpf"})
+                        @*@Html.EditorFor(model => model.CPF, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: cpf"}})*@
                         @Html.ValidationMessageFor(model => model.CPF, "", new {@class = "text-danger"})
                         <span class="text-danger" data-bind="text: erroValidacao"></span>
                     </div>
@@ -92,7 +97,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">Selecione uma foto</label>
                     <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.FotoEscolhida, new {type = "file", @data_bind = "value: fotoescolhida"})
+                            @Html.TextBoxFor(model => model.FotoEscolhida, new { type = "file", @data_bind = "value: fotoescolhida" })
                     </div>
                 </div>
 
@@ -146,7 +151,7 @@
 
             </div>
         </div>
-        
+
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Endereço</h3>
@@ -182,8 +187,8 @@
                         @Html.ValidationMessageFor(model => model.Bairro, "", new { @class = "text-danger" })
                     </div>
                 </div>
-                
-                
+
+
                 <div class="form-group">
                     @Html.LabelFor(model => model.Estados, "Estado", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
@@ -192,12 +197,12 @@
                         @Html.ValidationMessageFor(model => model.Estados, "", new { @class = "text-danger" })
                     </div>
                 </div>
-                
+
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Cidades, "Cidade", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.IDCidade, new SelectList(Model.Cidades.OrderBy(i=>i.Cidade1), "Id", "Cidade1"),
+                        @Html.DropDownListFor(model => model.IDCidade, new SelectList(Model.Cidades.OrderBy(i => i.Cidade1), "Id", "Cidade1"),
                             "-Selecione uma cidade-", htmlAttributes: new { @class = "form-control", @data_bind = "value: idcidade" })
                         @Html.ValidationMessageFor(model => model.Cidades, "", new { @class = "text-danger" })
                     </div>
@@ -215,7 +220,7 @@
             </div>
         </div>
 
-        
+
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Dados do conjuge</h3>
@@ -223,32 +228,32 @@
             <div class="panel-body">
                 <hr />
                 <div class="form-group">
-                    @Html.LabelFor(model => model.NomeConjuge, "Nome completo do conjuge", htmlAttributes: new {@class = "control-label col-md-2"})
+                    @Html.LabelFor(model => model.NomeConjuge, "Nome completo do conjuge", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.NomeConjuge, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: nomeconjuge"}})
-                        @Html.ValidationMessageFor(model => model.NomeConjuge, "", new {@class = "text-danger"})
+                        @Html.EditorFor(model => model.NomeConjuge, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: nomeconjuge" } })
+                        @Html.ValidationMessageFor(model => model.NomeConjuge, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.DataNascimentoConjuge, "Data de nascimento do conjuge", htmlAttributes: new {@class = "control-label col-md-2"})
+                    @Html.LabelFor(model => model.DataNascimentoConjuge, "Data de nascimento do conjuge", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.DataNascimentoConjuge, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: datanascimentoconjuge"}})
-                        @Html.ValidationMessageFor(model => model.DataNascimentoConjuge, "", new {@class = "text-danger"})
+                        @Html.EditorFor(model => model.DataNascimentoConjuge, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: datanascimentoconjuge" } })
+                        @Html.ValidationMessageFor(model => model.DataNascimentoConjuge, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.TelefoneConjuge, "Telefone do conjuge", htmlAttributes: new {@class = "control-label col-md-2"})
+                    @Html.LabelFor(model => model.TelefoneConjuge, "Telefone do conjuge", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.TelefoneConjuge, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: telefoneconjuge"}})
-                        @Html.ValidationMessageFor(model => model.TelefoneConjuge, "", new {@class = "text-danger"})
+                        @Html.EditorFor(model => model.TelefoneConjuge, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: telefoneconjuge" } })
+                        @Html.ValidationMessageFor(model => model.TelefoneConjuge, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.EmailConjuge, "Email do conjuge", htmlAttributes: new {@class = "control-label col-md-2"})
+                    @Html.LabelFor(model => model.EmailConjuge, "Email do conjuge", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.EmailConjuge, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: emailconjuge"}})
-                        @Html.ValidationMessageFor(model => model.EmailConjuge, "", new {@class = "text-danger"})
+                        @Html.EditorFor(model => model.EmailConjuge, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: emailconjuge" } })
+                        @Html.ValidationMessageFor(model => model.EmailConjuge, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
@@ -256,12 +261,12 @@
                     <div class="col-md-10">
                         @Html.DropDownListFor(model => model.IDTipoConjuge, new SelectList(Model.TiposConjuge, "Id", "DescricaoTipo"),
                             "-Selecione um tipo-", htmlAttributes: new { @class = "form-control", @data_bind = "value: idtipoconjuge" })
-                        @Html.ValidationMessageFor(model => model.IDTipoConjuge, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.TiposConjuge, "", new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Dados dos filhos</h3>
@@ -271,43 +276,43 @@
                 <div class="form-inline">
                     <div class="col-md-10">
                         <label class="control-label col-md-1">Possui filhos?</label>
-                        <label class="radio-inline"><input type="radio" name="optradio" value="1">Sim</label>
-                        <label class="radio-inline"><input type="radio" name="optradio" value="0" checked="checked">Não</label>
+                        <label class="radio-inline"><input type="radio" name="optradio" id="radioSim" value="1" checked="checked">Sim</label>
+                        <label class="radio-inline"><input type="radio" name="optradio" value="0" id="radioNao">Não</label>
                         <table>
                             <thead>
-                            <tr>
-                                <th>@Html.LabelFor(model => model.Filho.Nome, "Nome completo", htmlAttributes: new {@class = "control-label col-md-1", @id="label1"})</th>
-                                <th>@Html.LabelFor(model => model.Filho.DataNascimentoFilho, htmlAttributes: new {@class = "control-label col-md-2", @id = "label2" })</th>
-                            </tr>
+                                <tr>
+                                    <th>@Html.LabelFor(model => model.Filho.Nome, "Nome completo", htmlAttributes: new { @class = "control-label col-md-1", @id = "label1" })</th>
+                                    <th>@Html.LabelFor(model => model.Filho.DataNascimentoFilho, htmlAttributes: new { @class = "control-label col-md-2", @id = "label2" })</th>
+                                </tr>
                             </thead>
                             <tbody data-bind="foreach: filhos">
-                            <tr>
-                                <td>@Html.EditorFor(model => model.Filho.Nome, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: nome"}})<br/></td>
-                                <td>@Html.EditorFor(model => model.Filho.DataNascimentoFilho, new {htmlAttributes = new {@class = "form-control", @data_bind = "value: datanascimentofilho" } }) <br/></td>
-                                <td><button id="btnremoverfilho" class="form-control btn btn-danger" data-bind="click: $root.removerFilho">Remover</button><br/></td>
-                            </tr>
+                                <tr>
+                                    <td>@Html.EditorFor(model => model.Filho.Nome, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: Nome" } })<br /></td>
+                                    <td>@Html.EditorFor(model => model.Filho.DataNascimentoFilho, new { htmlAttributes = new { @class = "form-control", @data_bind = "value: datanascimentofilho" } }) <br /></td>
+                                    <td><button id="btnremoverfilho" class="form-control btn btn-danger" data-bind="click: $root.removerFilho">Remover</button><br /></td>
+                                </tr>
                             </tbody>
-                        </table><br/>
+                        </table><br />
                         <button id="btnfilho" class="form-control btn btn-default" data-bind="click: novoFilho">Novo filho</button>
                     </div>
                 </div>
             </div>
-            </div>
+        </div>
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input id="submeter" value="Salvar cadastro" class="btn btn-success" />
-                </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input id="submeter" value="Salvar cadastro" class="btn btn-success" />
             </div>
         </div>
+    </div>
 }
 
 <div>
     @Html.ActionLink("Retornar à lista", "Index")
 </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/inputmask")
     @Scripts.Render("~/bundles/jquery-ajax")
     @Scripts.Render("~/bundles/knockout")
     <script>
@@ -315,15 +320,15 @@
             .ready(function() {
                 $("#CPF").inputmask("mask", { "mask": "999.999.999-99" }, { reverse: true });
                 $("#CEP").inputmask("mask", { "mask": "99999-999" }, { reverse: true });
-                $("#Telefone").inputmask("mask", { "mask": "(99)9999-9999" }, { reverse: true });
-                $("#Celular").inputmask("mask", { "mask": "(99)99999-9999" }, { reverse: true });
                 $("#TelefoneConjuge").inputmask("mask", { "mask": "(99)9999-9999" }, { reverse: true });
-                $("#label1").hide();
-                $("#label2").hide();
-                $("#btnfilho").hide();
-                $("#Filho_Nome").hide();
-                $("#Filho_DataNascimento").hide();
-                $("#btnremoverfilho").hide();
+                $("#Celular").inputmask("mask", { "mask": "(99)99999-9999" }, { reverse: true });
+                $("#conjugeMembro_Telefone").inputmask("mask", { "mask": "(99)9999-9999" }, { reverse: true });
+                //$("#label1").hide();
+                //$("#label2").hide();
+                //$("#btnfilho").hide();
+                //$("#Filho_Nome").hide();
+                //$("#Filho_DataNascimento").hide();
+                //$("#btnremoverfilho").hide();
 
             });
 
@@ -338,61 +343,63 @@
             self.idesposa = ko.observable(idesposa);
         }
 
-        function Filho(id, nome, datanascimentofilho, idmae) {
+        function Filho(id, idmae, membro, nome, datanascimentofilho) {
             var self = this;
-            self.id = ko.observable(id);
-            self.nome = ko.observable(nome);
+            self.ID = ko.observable(id);
+            self.Nome = ko.observable(nome);
             self.datanascimentofilho = ko.observable(datanascimentofilho);
-            self.idmae = ko.observable(idmae);
+            self.IDMae = ko.observable(idmae);
         }
 
         function FichaCadastralViewModel() {
+            var jsonFichaCadastralViewModel=@Html.Raw(JsonConvert.SerializeObject(Model, Formatting.None, new IsoDateTimeConverter() { DateTimeFormat = "yyyy-MM-dd" }));
+            console.log(jsonFichaCadastralViewModel);
+            //console.log(jsonFichaCadastralViewModel.Filhos);
             var self = this;
-            self.id = ko.observable();
-            self.nome = ko.observable("");
-            self.email = ko.observable("");
-            self.datanascimento = ko.observable();
-            self.telefone = ko.observable("");
-            self.celular = ko.observable("");
-            self.rg = ko.observable("");
-            self.orgaoexpedidor = ko.observable("");
-            self.cpf = ko.observable("");
-            self.cep = ko.observable("");
-            self.nacionalidade = ko.observable("");
-            self.endereco = ko.observable("");
-            self.complemento = ko.observable("");
-            self.bairro = ko.observable("");
-            self.estadocivil = ko.observable("");
-            self.idregiao = ko.observable();
-            self.iddistrito = ko.observable();
-            self.idigreja = ko.observable();
-            self.idcongregacao = ko.observable();
-            self.idestado = ko.observable();
-            self.idgrauinstrucao = ko.observable();
-            self.idcidade = ko.observable();
-            self.idtipoconjuge = ko.observable();
-            self.idnaturalidade = ko.observable();
-            self.id = ko.observable();
+            self.id = ko.observable(jsonFichaCadastralViewModel.id);
+            self.nome = ko.observable(jsonFichaCadastralViewModel.nome);
+            self.email = ko.observable(jsonFichaCadastralViewModel.email);
+            self.datanascimento = ko.observable(jsonFichaCadastralViewModel.datanascimento);
+            self.telefone = ko.observable(jsonFichaCadastralViewModel.telefone);
+            self.celular = ko.observable(jsonFichaCadastralViewModel.celular);
+            self.rg = ko.observable(jsonFichaCadastralViewModel.rg);
+            self.orgaoexpedidor = ko.observable(jsonFichaCadastralViewModel.orgaoexpedidor);
+            self.cpf = ko.observable(jsonFichaCadastralViewModel.cpf);
+            self.cep = ko.observable(jsonFichaCadastralViewModel.cep);
+            self.nacionalidade = ko.observable(jsonFichaCadastralViewModel.nacionalidade);
+            self.endereco = ko.observable(jsonFichaCadastralViewModel.endereco);
+            self.complemento = ko.observable(jsonFichaCadastralViewModel.complemento);
+            self.bairro = ko.observable(jsonFichaCadastralViewModel.bairro);
+            self.estadocivil = ko.observable(jsonFichaCadastralViewModel.estadocivil);
+            self.idregiao = ko.observable(jsonFichaCadastralViewModel.idregiao);
+            self.iddistrito = ko.observable(jsonFichaCadastralViewModel.iddistrito);
+            self.idigreja = ko.observable(jsonFichaCadastralViewModel.idigreja);
+            self.idcongregacao = ko.observable(jsonFichaCadastralViewModel.idcongregacao);
+            self.idestado = ko.observable(jsonFichaCadastralViewModel.idestado);
+            self.idgrauinstrucao = ko.observable(jsonFichaCadastralViewModel.idgrauinstrucao);
+            self.idcidade = ko.observable(jsonFichaCadastralViewModel.idcidade);
+            self.idtipoconjuge = ko.observable(jsonFichaCadastralViewModel.idtipoconjuge);
+            self.idnaturalidade = ko.observable(jsonFichaCadastralViewModel.idnaturalidade);
             self.filho = ko.observable();
-            self.filhos = ko.observableArray();
+            self.filhos = ko.observableArray(jsonFichaCadastralViewModel.Filhos);
             self.erroValidacao = ko.observable("");
-            self.idconjuge = ko.observable();
-            self.nomeconjuge = ko.observable("");
-            self.datanascimentoconjuge = ko.observable();
-            self.telefoneconjuge = ko.observable("");
-            self.idtipoconjuge = ko.observable();
-            self.emailconjuge = ko.observable("");
-            self.idesposa = ko.observable();
-
+            self.idconjuge = ko.observable(jsonFichaCadastralViewModel.idconjuge);
+            self.nomeconjuge = ko.observable(jsonFichaCadastralViewModel.nomeconjuge);
+            self.datanascimentoconjuge = ko.observable(jsonFichaCadastralViewModel.datanascimentoconjuge);
+            self.telefoneconjuge = ko.observable(jsonFichaCadastralViewModel.telefoneconjuge);
+            self.emailconjuge = ko.observable(jsonFichaCadastralViewModel.emailconjuge);
+            self.idesposa = ko.observable(jsonFichaCadastralViewModel.idesposa);
+            console.log(self.filhos());
+            self.foto=ko.observable("data:image/png;base64," + jsonFichaCadastralViewModel.Foto);
             self.fotoescolhida = ko.observable();
             self.fotoselecionada = "";
-            //self.foto = ko.observable("data:image/png;base64," + self.fotoselecionada());
             self.novoFilho = function() {
-                self.filhos.push(new Filho(0, "", 0, 0));
+                self.filhos.push(new Filho(0, 0,null, "", 0, 0));
             }
             self.removerFilho = function(filho) {
                 self.filhos.remove(filho);
             }
+
             $("#FotoEscolhida")
                 .change(function() {
                     var file = document.getElementById('FotoEscolhida').files[0];
@@ -411,15 +418,15 @@
 
             $("#submeter")
                 .click(function() {
-                    //var novoconjuge = {
-                    //    id: self.idconjuge(),
-                    //    nome: self.nomeconjuge(),
-                    //    datanascimento: self.datanascimentoconjuge(),
-                    //    telefone: self.telefoneconjuge(),
-                    //    idtipo: self.idtipoconjuge(),
-                    //    email: self.emailconjuge(),
-                    //    idesposa: self.idesposa()
-                    //};
+                    var novoconjuge = {
+                        id: self.idconjuge(),
+                        nome: self.nomeconjuge(),
+                        datanascimento: self.datanascimentoconjuge(),
+                        telefone: self.telefoneconjuge(),
+                        idtipo: self.idtipoconjuge(),
+                        email: self.emailconjuge(),
+                        idesposa: self.idesposa()
+                    };
 
                     var dado = {
                         id: self.id(),
@@ -437,6 +444,7 @@
                         complemento: self.complemento(),
                         bairro: self.bairro(),
                         estadocivil: self.estadocivil(),
+                        idtipoconjuge: self.idtipoconjuge(),
                         idregiao: self.idregiao(),
                         iddistrito: self.iddistrito(),
                         idigreja: self.idigreja(),
@@ -447,28 +455,22 @@
                         idnaturalidade: self.idnaturalidade(),
                         filho: self.filho(),
                         filhos: self.filhos(),
-                        idconjuge: self.idconjuge(),
-                        nomeconjuge: self.nomeconjuge(),
-                        datanascimentoconjuge: self.datanascimentoconjuge(),
-                        telefoneconjuge: self.telefoneconjuge(),
-                        idtipoconjuge: self.idtipoconjuge(),
-                        emailconjuge: self.emailconjuge(),
-                        idesposa: self.idesposa(),
-                        //conjugemembro: novoconjuge,
+                        conjugemembro: novoconjuge,
                         fotoescolhida: ko.toJSON(self.fotoselecionada)
                     };
+
                     console.log(dado);
                     $.ajax({
-                        url: '/Membros/NovaFicha',
+                        url: '/Membros/AlterarFicha',
                         type: 'post',
                         contentType: 'application/json; charset=utf-8',
-                        data:ko.toJSON(dado),
-                        success: function(xmlHttpRequest, textStatus, errorThrown) {
+                        data: ko.toJSON(dado),
+                        success: function (xmlHttpRequest, textStatus, errorThrown) {
                             console.log("success");
                             console.log(xmlHttpRequest);
                             window.location.href = "/Membros/Index";
                         },
-                        error: function(xmlHttpRequest, textStatus, errorThrown) {
+                        error: function (xmlHttpRequest, textStatus, errorThrown) {
                             console.log("error");
                             console.log(xmlHttpRequest);
                             var a = xmlHttpRequest.responseJSON;
@@ -498,12 +500,29 @@
                         $("#Filho_Nome").hide();
                         $("#Filho_DataNascimento").hide();
                         $("#btnremoverfilho").hide();
-                        self.filho = ko.observable();
-                        self.filhos.removeAll();
+                        /*self.filho = ko.observable();
+                        self.filhos.removeAll();*/
                     }
                 });
-        }
+            if (self.filhos().length > 0) {
+                $("#radioSim").prop("checked", true);
+                $("#label1").show();
+                $("#label2").show();
+                $("#btnfilho").show();
+                $("#Filho_Nome").show();
+                $("#Filho_DataNascimento").show();
+                $("#btnremoverfilho").show();
+            } else {
+                $("#radioNao").prop("checked", true);
+                $("#label1").hide();
+                $("#label2").hide();
+                $("#btnfilho").hide();
+                $("#Filho_Nome").hide();
+                $("#Filho_DataNascimento").hide();
+                $("#btnremoverfilho").hide();
 
+            }
+        }
         ko.applyBindings(new FichaCadastralViewModel());
     </script>
 }

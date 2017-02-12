@@ -14,7 +14,7 @@ namespace IgrejaOnlineWesleyana.Extensions
 
         static ValidatorFactory()
         {
-            //Validators.Add(typeof(IValidator<FichaCadastralViewModel>), new CPFValidatorViewModel());
+            Validators.Add(typeof(IValidator<FichaCadastralViewModel>), new CPFValidatorViewModel());
             Validators.Add(typeof(IValidator<Membro>), new CPFValidator());
 
         }

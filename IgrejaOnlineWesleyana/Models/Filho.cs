@@ -19,10 +19,10 @@ namespace IgrejaOnlineWesleyana.Models
 
         [Display(Name = "Data de Nascimento")]
         [Column(TypeName = "date")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         [JsonProperty(PropertyName = "datanascimentofilho")]
-        public DateTime DataNascimento { get; set; }
+        public DateTime DataNascimentoFilho { get; set; }
 
         public int IDMae { get; set; }
 

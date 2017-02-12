@@ -10,11 +10,13 @@ namespace IgrejaOnlineWesleyana.Models
         public IMWModel()
             : base("name=IMWModel")
         {
+            Configuration.ProxyCreationEnabled = false;
+            Configuration.LazyLoadingEnabled = false;
         }
 
         public virtual DbSet<Cidade> Cidade { get; set; }
         public virtual DbSet<Congregacao> Congregacao { get; set; }
-        public virtual DbSet<Conjugue> Conjugue { get; set; }
+        public virtual DbSet<Conjuge> Conjuge { get; set; }
         public virtual DbSet<Distrito> Distrito { get; set; }
         public virtual DbSet<Estado> Estado { get; set; }
         public virtual DbSet<Filho> Filho { get; set; }
@@ -23,7 +25,7 @@ namespace IgrejaOnlineWesleyana.Models
         public virtual DbSet<Igreja> Igreja { get; set; }
         public virtual DbSet<Membro> Membro { get; set; }
         public virtual DbSet<Regiao> Regiao { get; set; }
-        public virtual DbSet<TipoConjugue> TipoConjugue { get; set; }
+        public virtual DbSet<TipoConjuge> TipoConjuge { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -62,16 +64,16 @@ namespace IgrejaOnlineWesleyana.Models
                 .WithOptional(e => e.Congregacao)
                 .HasForeignKey(e => e.IDCongregacao);
 
-            modelBuilder.Entity<Conjugue>()
-                .Property(e => e.Nome)
+            modelBuilder.Entity<Conjuge>()
+                .Property(e => e.NomeConjuge)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Conjugue>()
-                .Property(e => e.Telefone)
+            modelBuilder.Entity<Conjuge>()
+                .Property(e => e.TelefoneConjuge)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Conjugue>()
-                .Property(e => e.Email)
+            modelBuilder.Entity<Conjuge>()
+                .Property(e => e.EmailConjuge)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Distrito>()
@@ -208,7 +210,7 @@ namespace IgrejaOnlineWesleyana.Models
                 .HasMany(e => e.Conjugue)
                 .WithRequired(e => e.Membro)
                 .HasForeignKey(e => e.IDEsposa)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete();
 
             modelBuilder.Entity<Membro>()
                 .HasMany(e => e.Distritos)
@@ -219,13 +221,13 @@ namespace IgrejaOnlineWesleyana.Models
                 .HasMany(e => e.Filhos)
                 .WithRequired(e => e.Membro)
                 .HasForeignKey(e => e.IDMae)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete();
 
             modelBuilder.Entity<Membro>()
                 .HasMany(e => e.Foto1)
                 .WithRequired(e => e.Membro)
                 .HasForeignKey(e => e.IDMembro)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete();
 
             modelBuilder.Entity<Membro>()
                 .HasMany(e => e.Igrejas)
@@ -253,14 +255,14 @@ namespace IgrejaOnlineWesleyana.Models
                 .HasForeignKey(e => e.IDRegiao)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<TipoConjugue>()
+            modelBuilder.Entity<TipoConjuge>()
                 .Property(e => e.DescricaoTipo)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<TipoConjugue>()
-                .HasMany(e => e.Conjugue)
-                .WithRequired(e => e.TipoConjugue)
-                .HasForeignKey(e => e.IDTipo)
+            modelBuilder.Entity<TipoConjuge>()
+                .HasMany(e => e.Conjuge)
+                .WithRequired(e => e.TipoConjuge)
+                .HasForeignKey(e => e.IDTipoConjuge)
                 .WillCascadeOnDelete(false);
         }
     }

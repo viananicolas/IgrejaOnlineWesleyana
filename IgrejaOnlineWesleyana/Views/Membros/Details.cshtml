@@ -1,10 +1,10 @@
 ﻿@model IgrejaOnlineWesleyana.Models.Membro
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalhes";
 }
 
-<h2>Details</h2>
+<h2>Detalhes</h2>
 
 <div>
     <h4>Membro</h4>
@@ -197,6 +197,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Alterar", "AlterarFicha", new { id = Model.ID }) |
+    @Html.ActionLink("Retornar à lista", "Index")
 </p>

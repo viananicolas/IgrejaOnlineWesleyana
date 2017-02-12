@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace IgrejaOnlineWesleyana.Models
 {
     using System;
@@ -22,6 +24,7 @@ namespace IgrejaOnlineWesleyana.Models
 
         [Column("Cidade")]
         [StringLength(100)]
+        [DisplayName("Naturalidade")]
         public string Cidade1 { get; set; }
 
         public virtual Estado Estado { get; set; }

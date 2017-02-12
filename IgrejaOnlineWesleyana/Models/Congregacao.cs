@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace IgrejaOnlineWesleyana.Models
 {
     using System;
@@ -20,6 +22,7 @@ namespace IgrejaOnlineWesleyana.Models
         public int? IDIgreja { get; set; }
 
         [StringLength(50)]
+        [DisplayName("Congregação")]
         public string Nome { get; set; }
 
         public int? IDResponsavel { get; set; }

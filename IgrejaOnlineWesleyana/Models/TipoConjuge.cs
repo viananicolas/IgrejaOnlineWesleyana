@@ -6,13 +6,13 @@ namespace IgrejaOnlineWesleyana.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("TipoConjugue")]
-    public partial class TipoConjugue
+    [Table("TipoConjuge")]
+    public partial class TipoConjuge
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public TipoConjugue()
+        public TipoConjuge()
         {
-            Conjugue = new HashSet<Conjugue>();
+            Conjuge = new HashSet<Conjuge>();
         }
 
         public int ID { get; set; }
@@ -22,6 +22,6 @@ namespace IgrejaOnlineWesleyana.Models
         public string DescricaoTipo { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Conjugue> Conjugue { get; set; }
+        public virtual ICollection<Conjuge> Conjuge { get; set; }
     }
 }

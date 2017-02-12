@@ -20,7 +20,7 @@ namespace IgrejaOnlineWesleyana
             ValidationConfiguration();
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
-        private void ValidationConfiguration()
+        private static void ValidationConfiguration()
         {
             FluentValidationModelValidatorProvider.Configure(provider =>
             {

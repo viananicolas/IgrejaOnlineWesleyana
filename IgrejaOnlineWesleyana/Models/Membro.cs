@@ -10,14 +10,13 @@ namespace IgrejaOnlineWesleyana.Models
     using System.Data.Entity.Spatial;
 
     [Table("Membro")]
-    [Validator(typeof(CPFValidator))]
     public partial class Membro
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Membro()
         {
             Congregacoes = new HashSet<Congregacao>();
-            Conjugue = new HashSet<Conjugue>();
+            Conjugue = new HashSet<Conjuge>();
             Distritos = new HashSet<Distrito>();
             Filhos = new HashSet<Filho>();
             Foto1 = new HashSet<Foto>();
@@ -50,7 +49,7 @@ namespace IgrejaOnlineWesleyana.Models
 
         [Display(Name="Data de Nascimento")]
         [Column(TypeName = "date")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         public DateTime DataNascimento { get; set; }
 
@@ -115,7 +114,7 @@ namespace IgrejaOnlineWesleyana.Models
         public virtual Congregacao Congregacao { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Conjugue> Conjugue { get; set; }
+        public virtual ICollection<Conjuge> Conjugue { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Distrito> Distritos { get; set; }

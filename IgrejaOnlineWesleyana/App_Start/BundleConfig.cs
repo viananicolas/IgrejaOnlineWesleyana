@@ -11,6 +11,13 @@ namespace IgrejaOnlineWesleyana
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/jquery-ajax").Include(
+                        "~/Scripts/jquery.unobtrusive*"));
+
+            bundles.Add(new ScriptBundle("~/bundles/jsscripts").Include(
+            "~/Scripts/jsscripts.js"));
+
+
             bundles.Add(new ScriptBundle("~/bundles/inputmask").Include(
             "~/Scripts/jquery.inputmask/inputmask*",
             "~/Scripts/jquery.inputmask/jquery*"));

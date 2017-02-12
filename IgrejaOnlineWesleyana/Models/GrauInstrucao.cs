@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace IgrejaOnlineWesleyana.Models
 {
     using System;
@@ -19,6 +21,7 @@ namespace IgrejaOnlineWesleyana.Models
 
         [Required]
         [StringLength(50)]
+        [DisplayName("Grau de instrução")]
         public string TipoGrau { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

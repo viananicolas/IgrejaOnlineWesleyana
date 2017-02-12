@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
-using System.Web;
+using System.Text;
 using System.Web.Mvc;
 using AutoMapper;
 using IgrejaOnlineWesleyana.Extensions;
@@ -16,33 +12,34 @@ using IgrejaOnlineWesleyana.Models;
 using IgrejaOnlineWesleyana.Repositories;
 using IgrejaOnlineWesleyana.ViewModels;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IgrejaOnlineWesleyana.Controllers
 {
     public class MembrosController : Controller
     {
-        private IMWModel db = new IMWModel();
-        private FichaRepository _fichaRepository = new FichaRepository();
-        private readonly MapperConfiguration _config;
+        private readonly IMWModel db = new IMWModel();
+        private readonly FichaRepository _fichaRepository = new FichaRepository();
         private readonly IMapper _mapper;
 
         public MembrosController()
         {
-            _config = new MapperConfiguration(cfg =>
+            var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Membro, FichaCadastralViewModel>();
+                cfg.CreateMap<Conjuge, FichaCadastralViewModel>();
                 cfg.CreateMap<FichaCadastralViewModel, Membro>();
+                cfg.CreateMap<FichaCadastralViewModel, Conjuge>();
+
             });
-            _mapper = _config.CreateMapper();
+            _mapper = config.CreateMapper();
         }
         // GET: Membros
         public async Task<ActionResult> Index()
         {
             var membro = db.Membro.Include(m => m.Cidade).Include(m => m.Cidade1).Include(m => m.Congregacao).Include(m => m.Distrito).Include(m => m.Estado).Include(m => m.GrauInstrucao).Include(m => m.Igreja).Include(m => m.Regiao);
-            return View(await membro.ToListAsync());
+            return View(await membro.OrderBy(e=>e.Nome).ToListAsync());
         }
-
+        [NoDirectAccess]
         // GET: Membros/Details/5
         public async Task<ActionResult> Details(int? id)
         {
@@ -50,7 +47,7 @@ namespace IgrejaOnlineWesleyana.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Membro membro = await db.Membro.FindAsync(id);
+            var membro = await db.Membro.FindAsync(id);
             if (membro == null)
             {
                 return HttpNotFound();
@@ -71,51 +68,70 @@ namespace IgrejaOnlineWesleyana.Controllers
                 Estados = await _fichaRepository.GetEstados(),
                 Cidades = await _fichaRepository.GetCidades(),
                 Naturalidades = await _fichaRepository.GetCidades(),
-                TiposConjugue = await _fichaRepository.GetTipoConjugue()
+                TiposConjuge = await _fichaRepository.GetTipoConjugue()
             };
             return View("NovaFicha", fichaCadastralViewModel);
         }
         [HttpPost]
+        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> NovaFicha(FichaCadastralViewModel fichaCadastralViewModel)
         {
-            /*O campo Nome é obrigatório.,O campo Telefone é obrigatório.
-             * ,O campo IDTipo é obrigatório.,O campo Email é obrigatório.
-             * ,O campo IDRegiao é obrigatório.,O campo IDDistrito é obrigatório.
-             * ,O campo IDIgreja é obrigatório.,O campo IDCongregacao é obrigatório.
-             * ,O campo IDEstado é obrigatório.,O campo IDGrauInstrucao é obrigatório.
-             * ,O campo IDCidade é obrigatório.,O campo IDNaturalidade é obrigatório.
-             * ,O campo IDTipoConjugue é obrigatório.
-*/
+            var teste = new JsonResult();
             try
             {
                 fichaCadastralViewModel.Foto = JsonConvert.DeserializeObject<byte[]>(fichaCadastralViewModel.FotoEscolhida);
-                if (ModelState.IsValid)
+                var validator = new CPFValidatorViewModel();
+                var result = validator.Validate(fichaCadastralViewModel);
+                var firstOrDefault = result.Errors.FirstOrDefault();
+                if (ModelState.IsValid && result.IsValid)
                 {
-
                     var membro = _mapper.Map<FichaCadastralViewModel, Membro>(fichaCadastralViewModel);
                     db.Membro.Add(membro);
                     db.SaveChanges();
-                    db.Membro.Attach(membro);
-                    /*if (fichaCadastralViewModel.ConjugueMembro.Nome != null)
+                    if (fichaCadastralViewModel.NomeConjuge != null)
                     {
-                        fichaCadastralViewModel.ConjugueMembro.IDEsposa = membro.ID;
-                        db.Conjugue.Add(fichaCadastralViewModel.ConjugueMembro);
+                        fichaCadastralViewModel.IDEsposa = membro.ID;
+                        var conjuge = _mapper.Map<FichaCadastralViewModel, Conjuge>(fichaCadastralViewModel);
+                        db.Conjuge.Add(conjuge);
                         db.SaveChanges();
-                    }*/
-                    /*foreach (var filho in fichaCadastralViewModel.Filhos)
-                    {
-                        filho.IDMae = membro.ID;
-                        db.Filho.Add(filho);
-                        db.SaveChanges();
-                    }*/
+                    }
                     return RedirectToAction("Index");
                 }
 
-                Debug.WriteLine(string.Join(",",
-                    ModelState.Values.Where(E => E.Errors.Count > 0)
-                    .SelectMany(E => E.Errors)
-                    .Select(E => E.ErrorMessage)
-                    .ToArray()));
+                var errorModel =
+                    from x in ModelState.Keys
+                    where ModelState[x].Errors.Count > 0
+                    select new
+                    {
+                        key = x,
+                        errors = ModelState[x].Errors.
+                            Select(y => y.ErrorMessage).
+                            ToArray()
+                    };
+
+                if (firstOrDefault != null)
+                {
+                    var error="";
+                    var x = errorModel.ToList();
+                    foreach (var item in errorModel)
+                    {
+                        var a = 0;
+                        error = error + " " + item.errors[a];
+                        a++;
+                    }
+                    teste = new JsonResult()
+                    {
+                        Data = firstOrDefault.ErrorMessage
+                    };
+                }
+                else
+                    teste = new JsonResult()
+                    {
+                        Data = errorModel
+                    };
+
+                teste.ContentEncoding=Encoding.UTF8;
+                HttpContext.Response.StatusCode =(int)HttpStatusCode.BadRequest;
 
                 fichaCadastralViewModel = new FichaCadastralViewModel
                 {
@@ -127,117 +143,131 @@ namespace IgrejaOnlineWesleyana.Controllers
                     Estados = await _fichaRepository.GetEstados(),
                     Cidades = await _fichaRepository.GetCidades(),
                     Naturalidades = await _fichaRepository.GetCidades(),
-                    TiposConjugue = await _fichaRepository.GetTipoConjugue()
+                    TiposConjuge = await _fichaRepository.GetTipoConjugue()
                 };
-                return View("NovaFicha", fichaCadastralViewModel);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
 
+            }
+            return Json(new { data=teste }, JsonRequestBehavior.AllowGet);
+        }
+        [NoDirectAccess]
+        [HttpGet]
+        public async Task<ActionResult> BuscarIDPorCPF(string cpf)
+        {
+            if (cpf == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var membro = await db.Membro.FirstOrDefaultAsync(e => e.CPF == cpf);
+            if (membro == null)
+            {
+                return HttpNotFound();
+            }
+            return Json(new { data = membro.ID }, JsonRequestBehavior.AllowGet);
+
+        }
+        [NoDirectAccess]
+        [HttpGet]
+        public async Task<ActionResult> AlterarFicha(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var membro = await db.Membro.FindAsync(id);
+            if (membro == null)
+            {
+                return HttpNotFound();
+            }
+            var conjuge = await _fichaRepository.GetConjugue(membro.ID);
+            var filhos = await _fichaRepository.GetFilhos(membro.ID);
+            var fichaCadastralViewModel = _mapper.Map<Membro,FichaCadastralViewModel>(membro);
+            fichaCadastralViewModel.Congregacoes = await _fichaRepository.GetCongregacoes();
+            fichaCadastralViewModel.Distritos = await _fichaRepository.GetDistritos();
+            fichaCadastralViewModel.Igrejas = await _fichaRepository.GetIgrejas();
+            fichaCadastralViewModel.Regioes = await _fichaRepository.GetRegioes();
+            fichaCadastralViewModel.GrausInstrucao = await _fichaRepository.GetGrausInstrucao();
+            fichaCadastralViewModel.Estados = await _fichaRepository.GetEstados();
+            fichaCadastralViewModel.Cidades = await _fichaRepository.GetCidades();
+            fichaCadastralViewModel.Naturalidades = await _fichaRepository.GetCidades();
+            fichaCadastralViewModel.TiposConjuge = await _fichaRepository.GetTipoConjugue();
+            if (conjuge != null)
+            {
+                fichaCadastralViewModel.IDConjuge = conjuge.IDConjuge;
+                fichaCadastralViewModel.DataNascimentoConjuge = conjuge.DataNascimentoConjuge;
+                fichaCadastralViewModel.EmailConjuge = conjuge.EmailConjuge;
+                fichaCadastralViewModel.NomeConjuge = conjuge.NomeConjuge;
+                fichaCadastralViewModel.TelefoneConjuge = conjuge.TelefoneConjuge;
+                fichaCadastralViewModel.IDTipoConjuge = conjuge.IDTipoConjuge;
+                fichaCadastralViewModel.IDEsposa = conjuge.IDEsposa;
+
+            }
+            if(filhos.Count>0)
+            fichaCadastralViewModel.Filhos = filhos;
+            return View("AlterarFicha", fichaCadastralViewModel);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AlterarFicha(FichaCadastralViewModel fichaCadastralViewModel)
+        {
+            var jsonResult = new JsonResult();
+            try
+            {
+                fichaCadastralViewModel.Foto = JsonConvert.DeserializeObject<byte[]>(fichaCadastralViewModel.FotoEscolhida);
+                if (ModelState.IsValid)
+                {
+                    var membro = _mapper.Map<FichaCadastralViewModel, Membro>(fichaCadastralViewModel);
+                    db.Entry(membro).State = EntityState.Modified;
+                    db.SaveChanges();
+                    if (fichaCadastralViewModel.NomeConjuge == null) return RedirectToAction("Index");
+                    fichaCadastralViewModel.IDEsposa = membro.ID;
+                    var conjuge = _mapper.Map<FichaCadastralViewModel, Conjuge>(fichaCadastralViewModel);
+                    fichaCadastralViewModel.IDEsposa = membro.ID;
+                    db.Entry(conjuge).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+
+                var errorModel =
+                    from x in ModelState.Keys
+                    where ModelState[x].Errors.Count > 0
+                    select new
+                    {
+                        key = x,
+                        errors = ModelState[x].Errors.
+                            Select(y => y.ErrorMessage).
+                            ToArray()
+                    };
+
+                jsonResult = new JsonResult
+                {
+                    Data = errorModel,
+                    ContentEncoding = Encoding.UTF8
+                };
+
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+                fichaCadastralViewModel = new FichaCadastralViewModel
+                {
+                    Congregacoes = await _fichaRepository.GetCongregacoes(),
+                    Distritos = await _fichaRepository.GetDistritos(),
+                    Igrejas = await _fichaRepository.GetIgrejas(),
+                    Regioes = await _fichaRepository.GetRegioes(),
+                    GrausInstrucao = await _fichaRepository.GetGrausInstrucao(),
+                    Estados = await _fichaRepository.GetEstados(),
+                    Cidades = await _fichaRepository.GetCidades(),
+                    Naturalidades = await _fichaRepository.GetCidades(),
+                    TiposConjuge = await _fichaRepository.GetTipoConjugue()
+                };
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e);
             }
-            return View("NovaFicha", fichaCadastralViewModel);
-        }
-
-        // GET: Membros/Create
-        public ActionResult Create()
-        {
-            ViewBag.IDNaturalidade = new SelectList(db.Cidade, "ID", "Cidade1");
-            ViewBag.IDCidade = new SelectList(db.Cidade, "ID", "Cidade1");
-            ViewBag.IDCongregacao = new SelectList(db.Congregacao, "ID", "Nome");
-            ViewBag.IDDistrito = new SelectList(db.Distrito, "ID", "Nome");
-            ViewBag.IDEstado = new SelectList(db.Estado, "ID", "UF");
-            ViewBag.IDGrauInstrucao = new SelectList(db.GrauInstrucao, "ID", "TipoGrau");
-            ViewBag.IDIgreja = new SelectList(db.Igreja, "ID", "Nome");
-            ViewBag.IDRegiao = new SelectList(db.Regiao, "ID", "Nome");
-            return View();
-        }
-
-        // POST: Membros/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,IDRegiao,IDDistrito,IDIgreja,IDCongregacao,Nome,Email,DataNascimento,Telefone,Celular,Nacionalidade,IDNaturalidade,Endereco,Complemento,Bairro,IDCidade,IDEstado,CEP,EstadoCivil,RG,OrgaoExpedidor,CPF,IDGrauInstrucao,Foto")] Membro membro)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Membro.Add(membro);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.IDNaturalidade = new SelectList(db.Cidade, "ID", "Cidade1", membro.IDNaturalidade);
-            ViewBag.IDCidade = new SelectList(db.Cidade, "ID", "Cidade1", membro.IDCidade);
-            ViewBag.IDCongregacao = new SelectList(db.Congregacao, "ID", "Nome", membro.IDCongregacao);
-            ViewBag.IDDistrito = new SelectList(db.Distrito, "ID", "Nome", membro.IDDistrito);
-            ViewBag.IDEstado = new SelectList(db.Estado, "ID", "UF", membro.IDEstado);
-            ViewBag.IDGrauInstrucao = new SelectList(db.GrauInstrucao, "ID", "TipoGrau", membro.IDGrauInstrucao);
-            ViewBag.IDIgreja = new SelectList(db.Igreja, "ID", "Nome", membro.IDIgreja);
-            ViewBag.IDRegiao = new SelectList(db.Regiao, "ID", "Nome", membro.IDRegiao);
-            return View(membro);
-        }
-
-        // GET: Membros/Edit/5
-        public async Task<ActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Membro membro = await db.Membro.FindAsync(id);
-            if (membro == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.IDNaturalidade = new SelectList(db.Cidade, "ID", "Cidade1", membro.IDNaturalidade);
-            ViewBag.IDCidade = new SelectList(db.Cidade, "ID", "Cidade1", membro.IDCidade);
-            ViewBag.IDCongregacao = new SelectList(db.Congregacao, "ID", "Nome", membro.IDCongregacao);
-            ViewBag.IDDistrito = new SelectList(db.Distrito, "ID", "Nome", membro.IDDistrito);
-            ViewBag.IDEstado = new SelectList(db.Estado, "ID", "UF", membro.IDEstado);
-            ViewBag.IDGrauInstrucao = new SelectList(db.GrauInstrucao, "ID", "TipoGrau", membro.IDGrauInstrucao);
-            ViewBag.IDIgreja = new SelectList(db.Igreja, "ID", "Nome", membro.IDIgreja);
-            ViewBag.IDRegiao = new SelectList(db.Regiao, "ID", "Nome", membro.IDRegiao);
-            return View(membro);
-        }
-
-        // POST: Membros/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,IDRegiao,IDDistrito,IDIgreja,IDCongregacao,Nome,Email,DataNascimento,Telefone,Celular,Nacionalidade,IDNaturalidade,Endereco,Complemento,Bairro,IDCidade,IDEstado,CEP,EstadoCivil,RG,OrgaoExpedidor,CPF,IDGrauInstrucao,Foto")] Membro membro)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(membro).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            ViewBag.IDNaturalidade = new SelectList(db.Cidade, "ID", "Cidade1", membro.IDNaturalidade);
-            ViewBag.IDCidade = new SelectList(db.Cidade, "ID", "Cidade1", membro.IDCidade);
-            ViewBag.IDCongregacao = new SelectList(db.Congregacao, "ID", "Nome", membro.IDCongregacao);
-            ViewBag.IDDistrito = new SelectList(db.Distrito, "ID", "Nome", membro.IDDistrito);
-            ViewBag.IDEstado = new SelectList(db.Estado, "ID", "UF", membro.IDEstado);
-            ViewBag.IDGrauInstrucao = new SelectList(db.GrauInstrucao, "ID", "TipoGrau", membro.IDGrauInstrucao);
-            ViewBag.IDIgreja = new SelectList(db.Igreja, "ID", "Nome", membro.IDIgreja);
-            ViewBag.IDRegiao = new SelectList(db.Regiao, "ID", "Nome", membro.IDRegiao);
-            return View(membro);
-        }
-
-        // GET: Membros/Delete/5
-        public async Task<ActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Membro membro = await db.Membro.FindAsync(id);
-            if (membro == null)
-            {
-                return HttpNotFound();
-            }
-            return View(membro);
+            return Json(new { data = jsonResult }, JsonRequestBehavior.AllowGet);
         }
 
         // POST: Membros/Delete/5

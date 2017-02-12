@@ -11,12 +11,12 @@ namespace IgrejaOnlineWesleyana.Repositories
 
     /*            ViewBag.IDNaturalidade = new SelectList(db.Cidade, "ID", "Cidade1");
             ViewBag.IDCidade = new SelectList(db.Cidade, "ID", "Cidade1");
-            ViewBag.IDCongregacao = new SelectList(db.Congregacoes, "ID", "Nome");
-            ViewBag.IDDistrito = new SelectList(db.Distritos, "ID", "Nome");
+            ViewBag.IDCongregacao = new SelectList(db.Congregacoes, "ID", "NomeConjuge");
+            ViewBag.IDDistrito = new SelectList(db.Distritos, "ID", "NomeConjuge");
             ViewBag.IDEstado = new SelectList(db.Estado, "ID", "UF");
             ViewBag.IDGrauInstrucao = new SelectList(db.GrauInstrucao, "ID", "TipoGrau");
-            ViewBag.IDIgreja = new SelectList(db.Igrejas, "ID", "Nome");
-            ViewBag.IDRegiao = new SelectList(db.Regiao, "ID", "Nome");*/
+            ViewBag.IDIgreja = new SelectList(db.Igrejas, "ID", "NomeConjuge");
+            ViewBag.IDRegiao = new SelectList(db.Regiao, "ID", "NomeConjuge");*/
     public class FichaRepository:IDisposable
     {
         private readonly IMWModel _dbImwModel = new IMWModel();
@@ -48,9 +48,22 @@ namespace IgrejaOnlineWesleyana.Repositories
         {
             return await _dbImwModel.GrauInstrucao.ToListAsync();
         }
-        public async Task<List<TipoConjugue>> GetTipoConjugue()
+        public async Task<List<TipoConjuge>> GetTipoConjugue()
         {
-            return await _dbImwModel.TipoConjugue.ToListAsync();
+            return await _dbImwModel.TipoConjuge.ToListAsync();
+        }
+        public async Task<Conjuge> GetConjugue(int idMembro)
+        {
+            return await _dbImwModel.Conjuge.FirstOrDefaultAsync(e => e.IDEsposa==idMembro);
+        }
+        public int GetMembroCPF(string CPF)
+        {
+            return  _dbImwModel.Membro.FirstOrDefault(e => e.CPF == CPF).ID;
+        }
+
+        public async Task<List<Filho>> GetFilhos(int idMembro)
+        {
+            return await _dbImwModel.Filho.Where(e => e.IDMae==idMembro).ToListAsync();
         }
         public void Dispose()
         {

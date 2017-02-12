@@ -72,30 +72,15 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
-    <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http">
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest">
     </Reference>
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -186,16 +171,22 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MembrosController.cs" />
+    <Compile Include="Extensions\AjaxAntiForgeryData.cs" />
+    <Compile Include="Extensions\AjaxAntiForgeryDataSerializer.cs" />
+    <Compile Include="Extensions\AjaxAntiForgeryHtmlExtensions.cs" />
     <Compile Include="Extensions\CPFValidator.cs" />
     <Compile Include="Extensions\Helper.cs" />
-    <Compile Include="Extensions\ValidadorFactory.cs" />
+    <Compile Include="Extensions\NoDirectAccessAtribute.cs" />
+    <Compile Include="Extensions\ValidateAntiForgeryTokenAttribute.cs" />
+    <Compile Include="Extensions\ValidatorFactory.cs" />
+    <Compile Include="Extensions\ValidateAjax.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Cidade.cs" />
     <Compile Include="Models\Congregacao.cs" />
-    <Compile Include="Models\Conjugue.cs" />
+    <Compile Include="Models\Conjuge.cs" />
     <Compile Include="Models\Distrito.cs" />
     <Compile Include="Models\Estado.cs" />
     <Compile Include="Models\Filho.cs" />
@@ -207,7 +198,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Membro.cs" />
     <Compile Include="Models\Regiao.cs" />
-    <Compile Include="Models\TipoConjugue.cs" />
+    <Compile Include="Models\TipoConjuge.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\FichaRepository.cs" />
     <Compile Include="Startup.cs" />
@@ -253,10 +244,13 @@
     <Content Include="Scripts\jquery.inputmask\jquery.inputmask.js" />
     <Content Include="Scripts\jquery.inputmask\jquery.inputmask.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jsscripts.js" />
     <Content Include="Scripts\knockout-3.4.1.debug.js" />
     <Content Include="Scripts\knockout-3.4.1.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
@@ -301,12 +295,11 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Membros\Create.cshtml" />
     <Content Include="Views\Membros\Delete.cshtml" />
     <Content Include="Views\Membros\Details.cshtml" />
-    <Content Include="Views\Membros\Edit.cshtml" />
     <Content Include="Views\Membros\Index.cshtml" />
     <Content Include="Views\Membros\NovaFicha.cshtml" />
+    <Content Include="Views\Membros\AlterarFicha.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -27,23 +27,27 @@ namespace IgrejaOnlineWesleyana.Extensions
         }
     }
 
-    //public class CPFValidatorViewModel : AbstractValidator<FichaCadastralViewModel>
-    //{
-    //    public CPFValidatorViewModel()
-    //    {
-    //        RuleFor(x => x.CPF).NotEmpty().WithMessage("CPF é um campo obrigatório").Must(UnicoCPF).WithMessage("Este CPF já existe");
-    //    }
+    public class CPFValidatorViewModel : AbstractValidator<FichaCadastralViewModel>
+    {
+        public CPFValidatorViewModel()
+        {
+            RuleFor(x => x.CPF).NotEmpty().WithMessage("CPF é um campo obrigatório").Must(UnicoCPF).WithMessage("Este CPF já existe");
+            RuleFor(x => x.IDRegiao).NotEmpty().WithMessage("Região é obrigatório");
 
-    //    private bool UnicoCPF(Membro membro, string CPF)
-    //    {
-    //        var _db = new IMWModel();
-    //        var dbMembro = _db.Membro.SingleOrDefault(x => x.CPF == CPF);
+        }
 
-    //        if (dbMembro == null)
-    //            return true;
+        private bool UnicoCPF(FichaCadastralViewModel membro, string CPF)
+        {
+            using (var db = new IMWModel())
+            {
+                var dbMembro = db.Membro.SingleOrDefault(x => x.CPF==CPF);
 
-    //        return dbMembro.ID == membro.ID;
-    //    }
-    //}
+                if (dbMembro == null)
+                    return true;
+
+                return dbMembro.ID == membro.Id;
+            }
+        }
+    }
 
 }
