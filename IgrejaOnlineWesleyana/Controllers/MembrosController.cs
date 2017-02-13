@@ -34,12 +34,14 @@ namespace IgrejaOnlineWesleyana.Controllers
             _mapper = config.CreateMapper();
         }
         // GET: Membros
+        [Authorize]
         public async Task<ActionResult> Index()
         {
             var membro = db.Membro.Include(m => m.Cidade).Include(m => m.Cidade1).Include(m => m.Congregacao).Include(m => m.Distrito).Include(m => m.Estado).Include(m => m.GrauInstrucao).Include(m => m.Igreja).Include(m => m.Regiao);
             return View(await membro.OrderBy(e=>e.Nome).ToListAsync());
         }
         [NoDirectAccess]
+        [Authorize]
         // GET: Membros/Details/5
         public async Task<ActionResult> Details(int? id)
         {
@@ -56,6 +58,8 @@ namespace IgrejaOnlineWesleyana.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+
         public async Task<ActionResult> NovaFicha()
         {
             var fichaCadastralViewModel = new FichaCadastralViewModel
@@ -73,6 +77,7 @@ namespace IgrejaOnlineWesleyana.Controllers
             return View("NovaFicha", fichaCadastralViewModel);
         }
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> NovaFicha(FichaCadastralViewModel fichaCadastralViewModel)
         {
@@ -270,13 +275,34 @@ namespace IgrejaOnlineWesleyana.Controllers
             }
             return Json(new { data = jsonResult }, JsonRequestBehavior.AllowGet);
         }
-
+        [Authorize]
+        public async Task<ActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Membro membro = await db.Membro.FindAsync(id);
+            if (membro == null)
+            {
+                return HttpNotFound();
+            }
+            return View(membro);
+        }
         // POST: Membros/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Membro membro = await db.Membro.FindAsync(id);
+            foreach (var filho in membro.Filhos.ToList())
+            {
+                db.Filho.Remove(filho);
+            }
+            var conjugue = await _fichaRepository.GetConjugue(membro.ID);
+            if(conjugue != null)
+            db.Conjuge.Remove(conjugue);
             db.Membro.Remove(membro);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

@@ -136,7 +136,8 @@ namespace IgrejaOnlineWesleyana.Controllers
 
         //
         // GET: /Account/Register
-        [AllowAnonymous]
+        [Authorize]
+        //[AllowAnonymous]
         public ActionResult Register()
         {
             return View();
@@ -145,7 +146,8 @@ namespace IgrejaOnlineWesleyana.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
+        //[AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {

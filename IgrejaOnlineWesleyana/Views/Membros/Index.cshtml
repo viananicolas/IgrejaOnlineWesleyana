@@ -9,8 +9,7 @@
 <p>
     @Html.ActionLink("Inserir novo", "NovaFicha",null, new { @class = "bg-info" })
 </p>
-    <div class="table-responsive">
-        <table class="table table-condensed table-bordered">
+        <table class="table table-condensed table-bordered table-responsive">
             <thead>
                 <tr>
                     <th>
@@ -74,9 +73,6 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Estado.UF)
                     </td>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.GrauInstrucao.TipoGrau)
-                        </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.Igreja.Nome)
                     </td>
@@ -110,4 +106,3 @@
             }
 </tbody>
         </table>
-    </div>

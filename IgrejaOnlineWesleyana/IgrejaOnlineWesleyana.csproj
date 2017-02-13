@@ -171,18 +171,14 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MembrosController.cs" />
-    <Compile Include="Extensions\AjaxAntiForgeryData.cs" />
-    <Compile Include="Extensions\AjaxAntiForgeryDataSerializer.cs" />
-    <Compile Include="Extensions\AjaxAntiForgeryHtmlExtensions.cs" />
     <Compile Include="Extensions\CPFValidator.cs" />
     <Compile Include="Extensions\Helper.cs" />
     <Compile Include="Extensions\NoDirectAccessAtribute.cs" />
-    <Compile Include="Extensions\ValidateAntiForgeryTokenAttribute.cs" />
     <Compile Include="Extensions\ValidatorFactory.cs" />
-    <Compile Include="Extensions\ValidateAjax.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Cidade.cs" />
     <Compile Include="Models\Congregacao.cs" />
