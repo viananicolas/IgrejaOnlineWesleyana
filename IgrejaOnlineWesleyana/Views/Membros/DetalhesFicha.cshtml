@@ -4,7 +4,7 @@
     ViewBag.Title = "Detalhes";
 }
 
-<h2>Detalhes</h2>
+<h2>Detalhes de @Html.DisplayFor(model => model.Nome)</h2>
 
 <div>
     <h4>Membro</h4>
@@ -19,7 +19,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Cidade1.Cidade1)
+            @Html.DisplayName("Cidade")
         </dt>
 
         <dd>
@@ -74,13 +74,13 @@
             @Html.DisplayFor(model => model.Regiao.Nome)
         </dd>
 
-        <dt>
+        @*<dt>
             @Html.DisplayNameFor(model => model.Nome)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Nome)
-        </dd>
+        </dd>*@
 
         <dt>
             @Html.DisplayNameFor(model => model.Email)
@@ -94,9 +94,9 @@
             @Html.DisplayNameFor(model => model.DataNascimento)
         </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.DataNascimento)
-        </dd>
+    <dd>
+        @Html.DisplayFor(model => model.DataNascimento)
+    </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Telefone)
@@ -155,14 +155,6 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.EstadoCivil)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EstadoCivil)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.RG)
         </dt>
 
@@ -182,17 +174,91 @@
             @Html.DisplayNameFor(model => model.CPF)
         </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CPF)
-        </dd>
+    <dd>
+        @Html.DisplayFor(model => model.CPF)
+    </dd>
+        @{
+            if (Model.Conjuge.Count > 0)
+            {
+                @*<dt>
+                    @Html.DisplayName("Conjuge")
+                </dt>*@
+                foreach (var conjuge in Model.Conjuge.ToList())
+                {
+                    <dt>
+                        @Html.DisplayName("Nome do conjuge")
+                    </dt>
 
-        <dt>
+                    <dd>
+                        @Html.DisplayFor(modelItem=>conjuge.NomeConjuge)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Data de nascimento do conjuge")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(modelItem => conjuge.DataNascimentoConjuge)
+
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Email do conjuge")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(modelItem => conjuge.EmailConjuge)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Telefone do conjuge")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(modelItem => conjuge.TelefoneConjuge)
+                    </dd>
+                }
+            }
+        }
+        @{
+            if (Model.Filhos.Count > 0)
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.Filhos)
+                </dt>
+                <dd>
+                    <table class="table table-condensed table-bordered table-responsive">
+                        <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Filhos.ToList()[0].Nome)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Filhos.ToList()[0].DataNascimentoFilho)
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.Filhos.ToList())
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Nome)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DataNascimentoFilho)
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </dd>
+            }
+        }
+        @*<dt>
             @Html.DisplayNameFor(model => model.Foto)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Foto)
-        </dd>
+        </dd>*@
 
     </dl>
 </div>

@@ -15,7 +15,7 @@ namespace IgrejaOnlineWesleyana.Models
         public Igreja()
         {
             Congregacao = new HashSet<Congregacao>();
-            Membro1 = new HashSet<Membro>();
+            Membro = new HashSet<Membro>();
         }
 
         public int ID { get; set; }
@@ -26,8 +26,6 @@ namespace IgrejaOnlineWesleyana.Models
         [StringLength(50)]
         [DisplayName("Igreja")]
         public string Nome { get; set; }
-
-        public int? IDResponsavel { get; set; }
 
         [StringLength(100)]
         public string Endereco { get; set; }
@@ -43,9 +41,7 @@ namespace IgrejaOnlineWesleyana.Models
 
         public virtual Distrito Distrito { get; set; }
 
-        public virtual Membro Membro { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Membro> Membro1 { get; set; }
+        public virtual ICollection<Membro> Membro { get; set; }
     }
 }

@@ -9,7 +9,6 @@ using System.Web.Mvc;
 using AutoMapper;
 using IgrejaOnlineWesleyana.Extensions;
 using IgrejaOnlineWesleyana.Models;
-using IgrejaOnlineWesleyana.Repositories;
 using IgrejaOnlineWesleyana.ViewModels;
 using Newtonsoft.Json;
 
@@ -17,8 +16,7 @@ namespace IgrejaOnlineWesleyana.Controllers
 {
     public class MembrosController : Controller
     {
-        private readonly IMWModel db = new IMWModel();
-        private readonly FichaRepository _fichaRepository = new FichaRepository();
+        private readonly IMWModel _db = new IMWModel();
         private readonly IMapper _mapper;
 
         public MembrosController()
@@ -29,27 +27,36 @@ namespace IgrejaOnlineWesleyana.Controllers
                 cfg.CreateMap<Conjuge, FichaCadastralViewModel>();
                 cfg.CreateMap<FichaCadastralViewModel, Membro>();
                 cfg.CreateMap<FichaCadastralViewModel, Conjuge>();
-
             });
             _mapper = config.CreateMapper();
         }
+
         // GET: Membros
         [Authorize]
         public async Task<ActionResult> Index()
         {
-            var membro = db.Membro.Include(m => m.Cidade).Include(m => m.Cidade1).Include(m => m.Congregacao).Include(m => m.Distrito).Include(m => m.Estado).Include(m => m.GrauInstrucao).Include(m => m.Igreja).Include(m => m.Regiao);
-            return View(await membro.OrderBy(e=>e.Nome).ToListAsync());
+            var membro =
+                _db.Membro.Include(m => m.Cidade)
+                    .Include(m => m.Cidade1)
+                    .Include(m => m.Congregacao)
+                    .Include(m => m.Distrito)
+                    .Include(m => m.Estado)
+                    .Include(m => m.GrauInstrucao)
+                    .Include(m => m.Igreja)
+                    .Include(m => m.Regiao);
+            return View(await membro.OrderBy(e => e.Nome).ToListAsync());
         }
+
         [NoDirectAccess]
         [Authorize]
         // GET: Membros/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> DetalhesFicha(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var membro = await db.Membro.FindAsync(id);
+            var membro = await _db.Membro.FindAsync(id);
             if (membro == null)
             {
                 return HttpNotFound();
@@ -64,18 +71,19 @@ namespace IgrejaOnlineWesleyana.Controllers
         {
             var fichaCadastralViewModel = new FichaCadastralViewModel
             {
-                Congregacoes = await _fichaRepository.GetCongregacoes(),
-                Distritos = await _fichaRepository.GetDistritos(),
-                Igrejas = await _fichaRepository.GetIgrejas(),
-                Regioes = await _fichaRepository.GetRegioes(),
-                GrausInstrucao = await _fichaRepository.GetGrausInstrucao(),
-                Estados = await _fichaRepository.GetEstados(),
-                Cidades = await _fichaRepository.GetCidades(),
-                Naturalidades = await _fichaRepository.GetCidades(),
-                TiposConjuge = await _fichaRepository.GetTipoConjugue()
+                Congregacoes = await _db.Congregacao.ToListAsync(),
+                Distritos = await _db.Distrito.ToListAsync(),
+                Igrejas = await _db.Igreja.ToListAsync(),
+                Regioes = await _db.Regiao.ToListAsync(),
+                GrausInstrucao = await _db.GrauInstrucao.ToListAsync(),
+                Estados = await _db.Estado.ToListAsync(),
+                Cidades = await _db.Cidade.ToListAsync(),
+                Naturalidades = await _db.Cidade.ToListAsync(),
+                TiposConjuge = await _db.TipoConjuge.ToListAsync()
             };
             return View("NovaFicha", fichaCadastralViewModel);
         }
+
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -89,16 +97,17 @@ namespace IgrejaOnlineWesleyana.Controllers
                 var firstOrDefault = result.Errors.FirstOrDefault();
                 if (ModelState.IsValid && result.IsValid)
                 {
-                    fichaCadastralViewModel.Foto = JsonConvert.DeserializeObject<byte[]>(fichaCadastralViewModel.FotoEscolhida);
+                    fichaCadastralViewModel.Foto =
+                        JsonConvert.DeserializeObject<byte[]>(fichaCadastralViewModel.FotoEscolhida);
                     var membro = _mapper.Map<FichaCadastralViewModel, Membro>(fichaCadastralViewModel);
-                    db.Membro.Add(membro);
-                    db.SaveChanges();
+                    _db.Membro.Add(membro);
+                    _db.SaveChanges();
                     if (fichaCadastralViewModel.NomeConjuge != null)
                     {
                         fichaCadastralViewModel.IDEsposa = membro.ID;
                         var conjuge = _mapper.Map<FichaCadastralViewModel, Conjuge>(fichaCadastralViewModel);
-                        db.Conjuge.Add(conjuge);
-                        db.SaveChanges();
+                        _db.Conjuge.Add(conjuge);
+                        _db.SaveChanges();
                     }
                     return RedirectToAction("Index");
                 }
@@ -116,7 +125,7 @@ namespace IgrejaOnlineWesleyana.Controllers
 
                 if (firstOrDefault != null)
                 {
-                    var error="";
+                    var error = "";
                     var x = errorModel.ToList();
                     foreach (var item in errorModel)
                     {
@@ -135,20 +144,20 @@ namespace IgrejaOnlineWesleyana.Controllers
                         Data = errorModel
                     };
 
-                jsonResult.ContentEncoding=Encoding.UTF8;
-                HttpContext.Response.StatusCode =(int)HttpStatusCode.BadRequest;
+                jsonResult.ContentEncoding = Encoding.UTF8;
+                HttpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
 
                 fichaCadastralViewModel = new FichaCadastralViewModel
                 {
-                    Congregacoes = await _fichaRepository.GetCongregacoes(),
-                    Distritos = await _fichaRepository.GetDistritos(),
-                    Igrejas = await _fichaRepository.GetIgrejas(),
-                    Regioes = await _fichaRepository.GetRegioes(),
-                    GrausInstrucao = await _fichaRepository.GetGrausInstrucao(),
-                    Estados = await _fichaRepository.GetEstados(),
-                    Cidades = await _fichaRepository.GetCidades(),
-                    Naturalidades = await _fichaRepository.GetCidades(),
-                    TiposConjuge = await _fichaRepository.GetTipoConjugue()
+                    Congregacoes = await _db.Congregacao.ToListAsync(),
+                    Distritos = await _db.Distrito.ToListAsync(),
+                    Igrejas = await _db.Igreja.ToListAsync(),
+                    Regioes = await _db.Regiao.ToListAsync(),
+                    GrausInstrucao = await _db.GrauInstrucao.ToListAsync(),
+                    Estados = await _db.Estado.ToListAsync(),
+                    Cidades = await _db.Cidade.ToListAsync(),
+                    Naturalidades = await _db.Cidade.ToListAsync(),
+                    TiposConjuge = await _db.TipoConjuge.ToListAsync()
                 };
             }
             catch (Exception e)
@@ -156,8 +165,9 @@ namespace IgrejaOnlineWesleyana.Controllers
                 Debug.WriteLine(e);
 
             }
-            return Json(new { data=jsonResult }, JsonRequestBehavior.AllowGet);
+            return Json(new {data = jsonResult}, JsonRequestBehavior.AllowGet);
         }
+
         [NoDirectAccess]
         [HttpGet]
         public async Task<ActionResult> BuscarIDPorCPF(string cpf)
@@ -166,14 +176,15 @@ namespace IgrejaOnlineWesleyana.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var membro = await db.Membro.FirstOrDefaultAsync(e => e.CPF == cpf);
+            var membro = await _db.Membro.FirstOrDefaultAsync(e => e.CPF == cpf);
             if (membro == null)
             {
                 return HttpNotFound();
             }
-            return Json(new { data = membro.ID }, JsonRequestBehavior.AllowGet);
+            return Json(new {data = membro.ID}, JsonRequestBehavior.AllowGet);
 
         }
+
         [NoDirectAccess]
         [HttpGet]
         public async Task<ActionResult> AlterarFicha(int? id)
@@ -182,23 +193,23 @@ namespace IgrejaOnlineWesleyana.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var membro = await db.Membro.FindAsync(id);
+            var membro = await _db.Membro.FindAsync(id);
             if (membro == null)
             {
                 return HttpNotFound();
             }
-            var conjuge = await _fichaRepository.GetConjugue(membro.ID);
-            var filhos = await _fichaRepository.GetFilhos(membro.ID);
-            var fichaCadastralViewModel = _mapper.Map<Membro,FichaCadastralViewModel>(membro);
-            fichaCadastralViewModel.Congregacoes = await _fichaRepository.GetCongregacoes();
-            fichaCadastralViewModel.Distritos = await _fichaRepository.GetDistritos();
-            fichaCadastralViewModel.Igrejas = await _fichaRepository.GetIgrejas();
-            fichaCadastralViewModel.Regioes = await _fichaRepository.GetRegioes();
-            fichaCadastralViewModel.GrausInstrucao = await _fichaRepository.GetGrausInstrucao();
-            fichaCadastralViewModel.Estados = await _fichaRepository.GetEstados();
-            fichaCadastralViewModel.Cidades = await _fichaRepository.GetCidades();
-            fichaCadastralViewModel.Naturalidades = await _fichaRepository.GetCidades();
-            fichaCadastralViewModel.TiposConjuge = await _fichaRepository.GetTipoConjugue();
+            var conjuge = await _db.Conjuge.FirstOrDefaultAsync(e => e.IDEsposa == membro.ID);
+            var filhos = await _db.Filho.Where(e => e.IDMae == membro.ID).ToListAsync();
+            var fichaCadastralViewModel = _mapper.Map<Membro, FichaCadastralViewModel>(membro);
+            fichaCadastralViewModel.Congregacoes = await _db.Congregacao.ToListAsync();
+            fichaCadastralViewModel.Distritos = await _db.Distrito.ToListAsync();
+            fichaCadastralViewModel.Igrejas = await _db.Igreja.ToListAsync();
+            fichaCadastralViewModel.Regioes = await _db.Regiao.ToListAsync();
+            fichaCadastralViewModel.GrausInstrucao = await _db.GrauInstrucao.ToListAsync();
+            fichaCadastralViewModel.Estados = await _db.Estado.ToListAsync();
+            fichaCadastralViewModel.Cidades = await _db.Cidade.ToListAsync();
+            fichaCadastralViewModel.Naturalidades = await _db.Cidade.ToListAsync();
+            fichaCadastralViewModel.TiposConjuge = await _db.TipoConjuge.ToListAsync();
             if (conjuge != null)
             {
                 fichaCadastralViewModel.IDConjuge = conjuge.IDConjuge;
@@ -210,8 +221,8 @@ namespace IgrejaOnlineWesleyana.Controllers
                 fichaCadastralViewModel.IDEsposa = conjuge.IDEsposa;
 
             }
-            if(filhos.Count>0)
-            fichaCadastralViewModel.Filhos = filhos;
+            if (filhos.Count > 0)
+                fichaCadastralViewModel.Filhos = filhos;
             return View("AlterarFicha", fichaCadastralViewModel);
         }
 
@@ -222,18 +233,19 @@ namespace IgrejaOnlineWesleyana.Controllers
             var jsonResult = new JsonResult();
             try
             {
-                fichaCadastralViewModel.Foto = JsonConvert.DeserializeObject<byte[]>(fichaCadastralViewModel.FotoEscolhida);
+                fichaCadastralViewModel.Foto =
+                    JsonConvert.DeserializeObject<byte[]>(fichaCadastralViewModel.FotoEscolhida);
                 if (ModelState.IsValid)
                 {
                     var membro = _mapper.Map<FichaCadastralViewModel, Membro>(fichaCadastralViewModel);
-                    db.Entry(membro).State = EntityState.Modified;
-                    db.SaveChanges();
+                    _db.Entry(membro).State = EntityState.Modified;
+                    _db.SaveChanges();
                     if (fichaCadastralViewModel.NomeConjuge == null) return RedirectToAction("Index");
                     fichaCadastralViewModel.IDEsposa = membro.ID;
                     var conjuge = _mapper.Map<FichaCadastralViewModel, Conjuge>(fichaCadastralViewModel);
                     fichaCadastralViewModel.IDEsposa = membro.ID;
-                    db.Entry(conjuge).State = EntityState.Modified;
-                    db.SaveChanges();
+                    _db.Entry(conjuge).State = EntityState.Modified;
+                    _db.SaveChanges();
                     return RedirectToAction("Index");
                 }
 
@@ -254,65 +266,75 @@ namespace IgrejaOnlineWesleyana.Controllers
                     ContentEncoding = Encoding.UTF8
                 };
 
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                HttpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
 
                 fichaCadastralViewModel = new FichaCadastralViewModel
                 {
-                    Congregacoes = await _fichaRepository.GetCongregacoes(),
-                    Distritos = await _fichaRepository.GetDistritos(),
-                    Igrejas = await _fichaRepository.GetIgrejas(),
-                    Regioes = await _fichaRepository.GetRegioes(),
-                    GrausInstrucao = await _fichaRepository.GetGrausInstrucao(),
-                    Estados = await _fichaRepository.GetEstados(),
-                    Cidades = await _fichaRepository.GetCidades(),
-                    Naturalidades = await _fichaRepository.GetCidades(),
-                    TiposConjuge = await _fichaRepository.GetTipoConjugue()
+                    Congregacoes = await _db.Congregacao.ToListAsync(),
+                    Distritos = await _db.Distrito.ToListAsync(),
+                    Igrejas = await _db.Igreja.ToListAsync(),
+                    Regioes = await _db.Regiao.ToListAsync(),
+                    GrausInstrucao = await _db.GrauInstrucao.ToListAsync(),
+                    Estados = await _db.Estado.ToListAsync(),
+                    Cidades = await _db.Cidade.ToListAsync(),
+                    Naturalidades = await _db.Cidade.ToListAsync(),
+                    TiposConjuge = await _db.TipoConjuge.ToListAsync()
                 };
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e);
             }
-            return Json(new { data = jsonResult }, JsonRequestBehavior.AllowGet);
+            return Json(new {data = jsonResult}, JsonRequestBehavior.AllowGet);
         }
+
         [Authorize]
-        public async Task<ActionResult> Delete(int? id)
+        public async Task<ActionResult> ExcluirFicha(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Membro membro = await db.Membro.FindAsync(id);
+            Membro membro = await _db.Membro.FindAsync(id);
             if (membro == null)
             {
                 return HttpNotFound();
             }
             return View(membro);
         }
+
         // POST: Membros/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("ExcluirFicha")]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> ExcluirFichaConfirmed(int id)
         {
-            Membro membro = await db.Membro.FindAsync(id);
-            foreach (var filho in membro.Filhos.ToList())
+            try
             {
-                db.Filho.Remove(filho);
+                Membro membro = await _db.Membro.FindAsync(id);
+                foreach (var filho in membro.Filhos.ToList())
+                {
+                    _db.Filho.Remove(filho);
+                }
+                var conjuge = await _db.Conjuge.FirstOrDefaultAsync(e => e.IDEsposa == membro.ID);
+                if (conjuge != null)
+                    _db.Conjuge.Remove(conjuge);
+                _db.Membro.Remove(membro);
+                await _db.SaveChangesAsync();
+                return RedirectToAction("Index");
+
             }
-            var conjugue = await _fichaRepository.GetConjugue(membro.ID);
-            if(conjugue != null)
-            db.Conjuge.Remove(conjugue);
-            db.Membro.Remove(membro);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                _db.Dispose();
             }
             base.Dispose(disposing);
         }

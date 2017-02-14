@@ -446,14 +446,12 @@
                         idtipoconjuge: self.idtipoconjuge(),
                         emailconjuge: self.emailconjuge(),
                         idesposa: self.idesposa(),
-                        //conjugemembro: novoconjuge,
                         fotoescolhida: ko.toJSON(self.fotoselecionada)
                     };
                     console.log(dado);
                     $.ajax({
                         url: '/Membros/NovaFicha',
                         type: 'post',
-                        //contentType: 'application/json; charset=utf-8',
                         data: {
                             __RequestVerificationToken:$('input[name="__RequestVerificationToken"]').val(),
                             fichaCadastralViewModel:dado
@@ -473,7 +471,7 @@
                             $("#CPF").focus();
                         },
                         complete: function() {
-                            console.log("oi");
+                            console.log("complete");
                             $("#submeter").prop("disabled", false);
 
                         }

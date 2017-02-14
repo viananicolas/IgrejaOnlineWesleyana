@@ -15,13 +15,9 @@ namespace IgrejaOnlineWesleyana.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Membro()
         {
-            Congregacoes = new HashSet<Congregacao>();
-            Conjugue = new HashSet<Conjuge>();
-            Distritos = new HashSet<Distrito>();
+            Conjuge = new HashSet<Conjuge>();
             Filhos = new HashSet<Filho>();
             Foto1 = new HashSet<Foto>();
-            Igrejas = new HashSet<Igreja>();
-            Regioes = new HashSet<Regiao>();
         }
 
         public int ID { get; set; }
@@ -108,16 +104,10 @@ namespace IgrejaOnlineWesleyana.Models
 
         public virtual Cidade Cidade1 { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Congregacao> Congregacoes { get; set; }
-
         public virtual Congregacao Congregacao { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Conjuge> Conjugue { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Distrito> Distritos { get; set; }
+        public virtual ICollection<Conjuge> Conjuge { get; set; }
 
         public virtual Distrito Distrito { get; set; }
 
@@ -131,14 +121,9 @@ namespace IgrejaOnlineWesleyana.Models
 
         public virtual GrauInstrucao GrauInstrucao { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Igreja> Igrejas { get; set; }
-
         public virtual Igreja Igreja { get; set; }
 
         public virtual Regiao Regiao { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Regiao> Regioes { get; set; }
     }
 }

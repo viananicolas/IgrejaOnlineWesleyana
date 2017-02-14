@@ -46,9 +46,6 @@
                         @Html.DisplayNameFor(model => model.Endereco)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Complemento)
-                    </th>
-                    <th>
                         @Html.DisplayNameFor(model => model.Bairro)
                     </th>
                     <th></th>
@@ -92,15 +89,12 @@
                         @Html.DisplayFor(modelItem => item.Endereco)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Complemento)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.Bairro)
                     </td>
                     <td>
                         @Html.ActionLink("Alterar", "AlterarFicha", new { id = item.ID }) |
-                        @Html.ActionLink("Detalhes", "Details", new { id = item.ID }) |
-                        @Html.ActionLink("Excluir", "Delete", new { id = item.ID })
+                        @Html.ActionLink("Detalhes", "DetalhesFicha", new { id = item.ID }) |
+                        @Html.ActionLink("Excluir", "ExcluirFicha", new { id = item.ID })
                     </td>
                 </tr>
             }

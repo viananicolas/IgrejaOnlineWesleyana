@@ -196,7 +196,6 @@
     <Compile Include="Models\Regiao.cs" />
     <Compile Include="Models\TipoConjuge.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\FichaRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\FichaCadastralViewModel.cs" />
   </ItemGroup>
@@ -292,8 +291,8 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Membros\Delete.cshtml" />
-    <Content Include="Views\Membros\Details.cshtml" />
+    <Content Include="Views\Membros\ExcluirFicha.cshtml" />
+    <Content Include="Views\Membros\DetalhesFicha.cshtml" />
     <Content Include="Views\Membros\Index.cshtml" />
     <Content Include="Views\Membros\NovaFicha.cshtml" />
     <Content Include="Views\Membros\AlterarFicha.cshtml" />

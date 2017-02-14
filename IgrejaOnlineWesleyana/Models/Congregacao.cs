@@ -14,7 +14,7 @@ namespace IgrejaOnlineWesleyana.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Congregacao()
         {
-            Membro1 = new HashSet<Membro>();
+            Membro = new HashSet<Membro>();
         }
 
         public int ID { get; set; }
@@ -24,8 +24,6 @@ namespace IgrejaOnlineWesleyana.Models
         [StringLength(50)]
         [DisplayName("Congregação")]
         public string Nome { get; set; }
-
-        public int? IDResponsavel { get; set; }
 
         [StringLength(100)]
         public string Endereco { get; set; }
@@ -38,9 +36,7 @@ namespace IgrejaOnlineWesleyana.Models
 
         public virtual Igreja Igreja { get; set; }
 
-        public virtual Membro Membro { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Membro> Membro1 { get; set; }
+        public virtual ICollection<Membro> Membro { get; set; }
     }
 }

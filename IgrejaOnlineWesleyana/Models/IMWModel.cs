@@ -84,7 +84,7 @@ namespace IgrejaOnlineWesleyana.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<Congregacao>()
-                .HasMany(e => e.Membro1)
+                .HasMany(e => e.Membro)
                 .WithOptional(e => e.Congregacao)
                 .HasForeignKey(e => e.IDCongregacao);
 
@@ -111,7 +111,7 @@ namespace IgrejaOnlineWesleyana.Models
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Distrito>()
-                .HasMany(e => e.Membro1)
+                .HasMany(e => e.Membro)
                 .WithOptional(e => e.Distrito)
                 .HasForeignKey(e => e.IDDistrito);
 
@@ -169,7 +169,7 @@ namespace IgrejaOnlineWesleyana.Models
                 .HasForeignKey(e => e.IDIgreja);
 
             modelBuilder.Entity<Igreja>()
-                .HasMany(e => e.Membro1)
+                .HasMany(e => e.Membro)
                 .WithOptional(e => e.Igreja)
                 .HasForeignKey(e => e.IDIgreja);
 
@@ -226,20 +226,10 @@ namespace IgrejaOnlineWesleyana.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<Membro>()
-                .HasMany(e => e.Congregacoes)
-                .WithOptional(e => e.Membro)
-                .HasForeignKey(e => e.IDResponsavel);
-
-            modelBuilder.Entity<Membro>()
-                .HasMany(e => e.Conjugue)
-                .WithRequired(e => e.Membro)
-                .HasForeignKey(e => e.IDEsposa)
-                .WillCascadeOnDelete();
-
-            modelBuilder.Entity<Membro>()
-                .HasMany(e => e.Distritos)
-                .WithOptional(e => e.Membro)
-                .HasForeignKey(e => e.IDResponsavel);
+                            .HasMany(e => e.Conjuge)
+                            .WithRequired(e => e.Membro)
+                            .HasForeignKey(e => e.IDEsposa)
+                            .WillCascadeOnDelete();
 
             modelBuilder.Entity<Membro>()
                 .HasMany(e => e.Filhos)
@@ -252,16 +242,6 @@ namespace IgrejaOnlineWesleyana.Models
                 .WithRequired(e => e.Membro)
                 .HasForeignKey(e => e.IDMembro)
                 .WillCascadeOnDelete();
-
-            modelBuilder.Entity<Membro>()
-                .HasMany(e => e.Igrejas)
-                .WithOptional(e => e.Membro)
-                .HasForeignKey(e => e.IDResponsavel);
-
-            modelBuilder.Entity<Membro>()
-                .HasMany(e => e.Regioes)
-                .WithOptional(e => e.Membro1)
-                .HasForeignKey(e => e.IDResponsavel);
 
             modelBuilder.Entity<Regiao>()
                 .Property(e => e.Nome)
@@ -285,9 +265,26 @@ namespace IgrejaOnlineWesleyana.Models
 
             modelBuilder.Entity<TipoConjuge>()
                 .HasMany(e => e.Conjuge)
-                .WithRequired(e => e.TipoConjuge)
-                .HasForeignKey(e => e.IDTipoConjuge)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.TipoConjuge)
+                .HasForeignKey(e => e.IDTipoConjuge);
         }
     }
 }
+/*            modelBuilder.Entity<Membro>()
+                .HasMany(e => e.Conjuge)
+                .WithRequired(e => e.Membro)
+                .HasForeignKey(e => e.IDEsposa)
+                .WillCascadeOnDelete();
+
+            modelBuilder.Entity<Membro>()
+                .HasMany(e => e.Filhos)
+                .WithRequired(e => e.Membro)
+                .HasForeignKey(e => e.IDMae)
+                .WillCascadeOnDelete();
+
+            modelBuilder.Entity<Membro>()
+                .HasMany(e => e.Foto1)
+                .WithRequired(e => e.Membro)
+                .HasForeignKey(e => e.IDMembro)
+                .WillCascadeOnDelete();
+*/
