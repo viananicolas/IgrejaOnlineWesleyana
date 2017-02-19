@@ -56,7 +56,14 @@ namespace IgrejaOnlineWesleyana.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var membro = await _db.Membro.FindAsync(id);
+            var membro = await _db.Membro.Include(m => m.Cidade)
+                .Include(m => m.Cidade1)
+                .Include(m => m.Congregacao)
+                .Include(m => m.Distrito)
+                .Include(m => m.Estado)
+                .Include(m => m.GrauInstrucao)
+                .Include(m => m.Igreja)
+                .Include(m => m.Regiao).FirstOrDefaultAsync(e => e.ID == id);
             if (membro == null)
             {
                 return HttpNotFound();

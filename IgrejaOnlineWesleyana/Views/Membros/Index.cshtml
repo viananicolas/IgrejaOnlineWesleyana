@@ -7,96 +7,99 @@
 <h2>Lista de membros</h2>
 
 <p>
-    @Html.ActionLink("Inserir novo", "NovaFicha",null, new { @class = "bg-info" })
+    <span class="label label-info">@Html.ActionLink("Inserir novo", "NovaFicha")</span>
 </p>
-        <table class="table table-condensed table-bordered table-responsive">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Nome)
-                    </th>
-                    <th>
-                        @Html.DisplayName("Cidade")
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Congregacao.Nome)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Distrito.Nome)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Estado.UF)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Igreja.Nome)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Regiao.Nome)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Email)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Telefone)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Celular)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Endereco)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Bairro)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>@foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nome)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Cidade1.Cidade1)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Congregacao.Nome)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Distrito.Nome)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Estado.UF)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Igreja.Nome)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Regiao.Nome)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Telefone)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Celular)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Endereco)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Bairro)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Alterar", "AlterarFicha", new { id = item.ID }) |
-                        @Html.ActionLink("Detalhes", "DetalhesFicha", new { id = item.ID }) |
-                        @Html.ActionLink("Excluir", "ExcluirFicha", new { id = item.ID })
-                    </td>
-                </tr>
-            }
-</tbody>
-        </table>
+<table class="table table-condensed table-bordered table-responsive">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nome)
+        </th>
+        <th>
+            @Html.DisplayName("Cidade")
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Congregacao.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Distrito.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Estado.UF)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Igreja.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Regiao.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Telefone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Celular)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Endereco)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Bairro)
+        </th>
+        <th>@Html.DisplayName("Ações")</th>
+    </tr>
+    </thead>
+    <tbody>@foreach (var item in Model)
+           {
+               <tr>
+                   <td>
+                       @Html.DisplayFor(modelItem => item.Nome)
+                   </td>
+                   <td>
+                       @Html.DisplayFor(modelItem => item.Cidade1.Cidade1)
+                   </td>
+                   <td>
+                       @Html.DisplayFor(modelItem => item.Congregacao.Nome)
+                   </td>
+                   <td>
+                       @Html.DisplayFor(modelItem => item.Distrito.Nome)
+                   </td>
+                   <td>
+                       @Html.DisplayFor(modelItem => item.Estado.UF)
+                   </td>
+                   <td>
+                       @Html.DisplayFor(modelItem => item.Igreja.Nome)
+                   </td>
+                   <td>
+                       @Html.DisplayFor(modelItem => item.Regiao.Nome)
+                   </td>
+                   <td>
+                       @Html.DisplayFor(modelItem => item.Email)
+                   </td>
+                   <td>
+                       @Html.DisplayFor(modelItem => item.Telefone)
+                   </td>
+                   <td>
+                       @Html.DisplayFor(modelItem => item.Celular)
+                   </td>
+                   <td>
+                       @Html.DisplayFor(modelItem => item.Endereco)
+                   </td>
+                   <td>
+                       @Html.DisplayFor(modelItem => item.Bairro)
+                   </td>
+                   <td>
+                       <span class="label label-primary">
+                           @Html.ActionLink("Alterar", "AlterarFicha", new { id = item.ID }, new { @class = "my-class" })</span> |
+                           <span class="label label-warning">
+                               @Html.ActionLink("Detalhes", "DetalhesFicha", new { id = item.ID }, new { @class = "my-class" })
+                           </span> |
+                           <span class="label label-danger">@Html.ActionLink("Excluir", "ExcluirFicha", new { id = item.ID }, new { @class = "my-class" })</span>
+</td>
+               </tr>
+           }
+    </tbody>
+</table>
+<small>Total de registros: <span class="badge">@Model.Count()</span></small>

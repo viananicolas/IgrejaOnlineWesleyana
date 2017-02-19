@@ -14,10 +14,6 @@ namespace IgrejaOnlineWesleyana
             bundles.Add(new ScriptBundle("~/bundles/jquery-ajax").Include(
                         "~/Scripts/jquery.unobtrusive*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/jsscripts").Include(
-            "~/Scripts/jsscripts.js"));
-
-
             bundles.Add(new ScriptBundle("~/bundles/inputmask").Include(
             "~/Scripts/jquery.inputmask/inputmask*",
             "~/Scripts/jquery.inputmask/jquery*"));
@@ -36,6 +32,9 @@ namespace IgrejaOnlineWesleyana
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/functions").Include(
+                "~/Scripts/jsscripts.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

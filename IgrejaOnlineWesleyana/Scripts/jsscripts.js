@@ -6,6 +6,7 @@
                 $("#CPFBusca").focus();
             });
     $("#btnCPF").click(function (event) {
+        event.preventDefault();
         $("#info-cpf").remove();
         $("#btnCPF").prop("disabled", true);
         $(".modal-body").append("<div class=\"loader\"></div>");
